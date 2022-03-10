@@ -7,8 +7,8 @@
   import EntryField from './components/entry-field.svelte';
   import ModalConfirm from './components/modal-confirm.svelte';
 
-  const daysOfTheWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
-  let currentDay = $date.dayOfTheWeek;
+  const { daysOfTheWeek, dayOfTheWeek } = $date;
+  let currentDay = dayOfTheWeek;
   let currentFilter = 'All';
 
   const handleAdd = (e) => {
@@ -106,8 +106,8 @@
 
 <div class="container">
   <header>
-    <CurrentDate {daysOfTheWeek} />
-    <DaysOfTheWeek {currentDay} {daysOfTheWeek} on:click={handleChangeDay} />
+    <CurrentDate />
+    <DaysOfTheWeek {currentDay} on:click={handleChangeDay} />
   </header>
 
   <main>

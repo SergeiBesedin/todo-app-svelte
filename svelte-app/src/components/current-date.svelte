@@ -1,22 +1,6 @@
 <script>
   import { date } from '../store/store';
-  export let daysOfTheWeek;
-  const { day, month, year, dayOfTheWeek } = $date;
-
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'June',
-    'July',
-    'Aug',
-    'Sept',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
+  const { day, month, months, year, dayOfTheWeek, daysOfTheWeek } = $date;
 </script>
 
 <div class="date">

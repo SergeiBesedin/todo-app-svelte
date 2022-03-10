@@ -1,10 +1,10 @@
 <script>
+  import { date } from '../store/store';
   export let currentDay;
-  export let daysOfTheWeek;
 </script>
 
 <ul class="days" on:click>
-  {#each daysOfTheWeek as day, i}
+  {#each $date.daysOfTheWeek as day, i}
     <li id={i} class:active={i == currentDay}>{day}</li>
   {/each}
 </ul>
