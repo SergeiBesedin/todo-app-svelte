@@ -10,7 +10,7 @@
 </script>
 
 <div class="modal-dialog">
-  <h2>Список дел на текущий день недели будет полностью очищен. Вы уверены?</h2>
+  <h2>Список дел на текущий день будет полностью очищен. Вы уверены?</h2>
   <button class="clear" on:click={() => handleConfirmDel(true)}>Очистить</button
   >
   <button class="cancel" on:click={() => handleConfirmDel(false)}
@@ -22,14 +22,16 @@
   .modal-dialog {
     z-index: 101;
     position: absolute;
-    top: 40%;
-    left: 39.5%;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%);
+    transform: translateX(-50%);
     display: none;
     border-radius: 10px;
     padding: 8px;
     max-width: 400px;
     text-align: center;
-    background: #696eff;
+    background: #f6a9ff;
     box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
     color: #ffffff;
     box-sizing: border-box;
@@ -42,16 +44,17 @@
   }
 
   .modal-dialog button {
-    background: #ffffff;
     border-radius: 5px;
+    color: #ffffff;
+    padding: 5px;
   }
 
   .clear {
     margin-right: 50px;
-    border: 2px solid greenyellow;
+    background: rgb(231, 25, 25);
   }
 
   .cancel {
-    border: 2px solid rgb(231, 25, 25);
+    background: #d1d1d1;
   }
 </style>

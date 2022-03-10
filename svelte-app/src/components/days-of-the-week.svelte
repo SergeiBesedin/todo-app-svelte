@@ -2,27 +2,28 @@
   import { onMount } from 'svelte';
   import { date } from '../store/store';
 
+  const { year, month, daysOfTheWeek } = $date;
   const calendar = [];
   let currentPosition = $date.day;
 
-  let totalDays = new Date($date.year, $date.month + 1, 0).getDate();
+  let totalDays = new Date(year, month + 1, 0).getDate();
   for (let i = 1; i <= totalDays; i++) {
     calendar.push(i);
   }
 
-  const nextWeek = (position) => {
+  const clickToBtnHandler = (position) => {
     currentPosition = position;
-    swipe();
+    scrollCarousel();
   };
 
-  const swipe = () => {
+  const scrollCarousel = () => {
     document.querySelector('.days-list').style.transform = `translate(${
       (currentPosition - 1) * -55
     }px, 0)`;
   };
 
   onMount(() => {
-    swipe();
+    scrollCarousel();
   });
 </script>
 
@@ -30,15 +31,13 @@
   <button
     class="btn-prev"
     class:disabled={currentPosition === 1}
-    on:click={() => nextWeek(currentPosition - 1)}>Prev</button
+    on:click={() => clickToBtnHandler(currentPosition - 1)}>Prev</button
   >
   <div class="container">
     <ul class="days-list" on:click>
       {#each calendar as number, i}
         <li id={number} class:active={$date.day == number}>
-          {$date.daysOfTheWeek[
-            new Date($date.year, $date.month, calendar[i]).getDay()
-          ]}
+          {daysOfTheWeek[new Date(year, month, calendar[i]).getDay()]}
           {number}
         </li>
       {/each}
@@ -47,7 +46,7 @@
   <button
     class="btn-next"
     class:disabled={currentPosition === calendar.length}
-    on:click={() => nextWeek(currentPosition + 1)}>Next</button
+    on:click={() => clickToBtnHandler(currentPosition + 1)}>Next</button
   >
 </div>
 
