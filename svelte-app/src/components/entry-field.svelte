@@ -6,7 +6,7 @@
 
   const changeText = (e) => {
     e.preventDefault();
-    dispatch('change', {
+    dispatch('changeText', {
       text: textTask.trim(),
     });
     textTask = '';

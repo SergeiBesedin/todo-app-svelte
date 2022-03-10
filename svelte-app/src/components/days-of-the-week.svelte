@@ -1,11 +1,21 @@
 <script>
   import { date } from '../store/store';
-  export let currentDay;
+
+  const calendar = [];
+  let totalDays = new Date($date.year, $date.month + 1, 0).getDate();
+  for (let i = 1; i <= totalDays; i++) {
+    calendar.push(i);
+  }
 </script>
 
 <ul class="days" on:click>
-  {#each $date.daysOfTheWeek as day, i}
-    <li id={i} class:active={i == currentDay}>{day}</li>
+  {#each calendar as number, i}
+    <li id={number} class:active={$date.day == number}>
+      {$date.daysOfTheWeek[
+        new Date($date.year, $date.month, calendar[i]).getDay()
+      ]}
+      {number}
+    </li>
   {/each}
 </ul>
 
@@ -13,8 +23,8 @@
   .days {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
     color: #d1d1d1;
+    overflow: hidden;
   }
 
   .days li {

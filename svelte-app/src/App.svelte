@@ -7,9 +7,10 @@
   import EntryField from './components/entry-field.svelte';
   import ModalConfirm from './components/modal-confirm.svelte';
 
-  const { daysOfTheWeek, dayOfTheWeek } = $date;
-  let currentDay = dayOfTheWeek;
   let currentFilter = 'All';
+  tasks.update((items) => {
+    return { ...items, [$date.day]: [] };
+  });
 
   const handleAdd = (e) => {
     if (e.detail.text === '') {
@@ -18,8 +19,8 @@
     tasks.update((items) => {
       return {
         ...items,
-        [daysOfTheWeek[currentDay]]: [
-          ...items[daysOfTheWeek[currentDay]],
+        [$date.day]: [
+          ...items[$date.day],
           {
             id: uuidv4(),
             text: e.detail.text,
@@ -34,17 +35,15 @@
     tasks.update((items) => {
       return {
         ...items,
-        [daysOfTheWeek[currentDay]]: items[daysOfTheWeek[currentDay]].filter(
-          (item) => {
-            return item.id !== e.detail.id;
-          }
-        ),
+        [$date.day]: items[$date.day].filter((item) => {
+          return item.id !== e.detail.id;
+        }),
       };
     });
   };
 
   const handleClear = () => {
-    if ($tasks[daysOfTheWeek[currentDay]].length === 0) {
+    if ($tasks[$date.day].length === 0) {
       return;
     }
     document.querySelector('.modal-dialog').style.display = 'block';
@@ -54,7 +53,7 @@
   const handleConfirmDel = (e) => {
     if (e.detail.conf === true) {
       tasks.update((items) => {
-        return { ...items, [daysOfTheWeek[currentDay]]: [] };
+        return { ...items, [$date.day]: [] };
       });
     }
     document.querySelector('.modal-dialog').style.display = 'none';
@@ -63,9 +62,21 @@
 
   const handleChangeDay = (e) => {
     if (e.target.tagName === 'LI') {
-      currentDay = e.target.id;
+      date.update((value) => {
+        return {
+          ...value,
+          day: Number(e.target.id),
+          dayOfTheWeek: new Date($date.year, $date.month, e.target.id).getDay(),
+        };
+      });
+      if ($tasks.hasOwnProperty([$date.day])) {
+        return;
+      } else {
+        tasks.update((items) => {
+          return { ...items, [$date.day]: [] };
+        });
+      }
     }
-    $tasks = $tasks;
   };
 
   const handleChangeFilter = (e) => {
@@ -76,11 +87,11 @@
 
   const filterTasks = (tasks, activeFilter) => {
     if (activeFilter === 'Active') {
-      return tasks[daysOfTheWeek[currentDay]].filter((t) => !t.done);
+      return tasks.filter((t) => !t.done);
     } else if (activeFilter === 'Completed') {
-      return tasks[daysOfTheWeek[currentDay]].filter((t) => t.done);
+      return tasks.filter((t) => t.done);
     } else {
-      return [...tasks[daysOfTheWeek[currentDay]]];
+      return [...tasks];
     }
   };
 
@@ -88,26 +99,24 @@
     tasks.update((items) => {
       return {
         ...items,
-        [daysOfTheWeek[currentDay]]: items[daysOfTheWeek[currentDay]].map(
-          (item) => {
-            if (item.id === e.detail.id) {
-              return { ...item, done: e.detail.checked };
-            } else {
-              return item;
-            }
+        [$date.day]: items[$date.day].map((item) => {
+          if (item.id === e.detail.id) {
+            return { ...item, done: e.detail.checked };
+          } else {
+            return item;
           }
-        ),
+        }),
       };
     });
   };
 
-  $: filteredTasks = filterTasks($tasks, currentFilter);
+  $: filteredTasks = filterTasks($tasks[$date.day], currentFilter);
 </script>
 
 <div class="container">
   <header>
     <CurrentDate />
-    <DaysOfTheWeek {currentDay} on:click={handleChangeDay} />
+    <DaysOfTheWeek on:click={handleChangeDay} />
   </header>
 
   <main>
@@ -118,7 +127,7 @@
       on:changeFilter={handleChangeFilter}
       on:changeDone={changeDoneHandler}
     />
-    <EntryField on:click={handleClear} on:change={handleAdd} />
+    <EntryField on:click={handleClear} on:changeText={handleAdd} />
   </main>
 </div>
 

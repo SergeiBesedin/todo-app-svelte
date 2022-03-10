@@ -1,12 +1,11 @@
 <script>
   import { date } from '../store/store';
-  const { day, month, months, year, dayOfTheWeek, daysOfTheWeek } = $date;
 </script>
 
 <div class="date">
-  <span>{day}</span>
-  <span>{months[month]}, {year}</span>
-  <span>{daysOfTheWeek[dayOfTheWeek]}</span>
+  <span>{$date.day}</span>
+  <span>{$date.getMonth()}, {$date.year}</span>
+  <span>{$date.getDayOfTheWeek()}</span>
 </div>
 
 <style>
