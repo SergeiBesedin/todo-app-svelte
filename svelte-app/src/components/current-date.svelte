@@ -10,6 +10,7 @@
 
 <style>
   .date {
+    margin-left: 25px;
     display: grid;
     max-width: 160px;
     grid-template-areas:

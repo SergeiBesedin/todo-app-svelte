@@ -144,7 +144,7 @@
   }
 
   header {
-    padding: 15px 15px 10px;
+    padding: 15px 10px 10px;
     background: linear-gradient(0deg, #696eff, #f6a9ff);
   }
 
