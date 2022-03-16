@@ -1,6 +1,6 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
-  import { tasks, date } from './store/store';
+  import { tasks, basket, date } from './store/store';
   import CurrentDate from './components/current-date.svelte';
   import DaysOfTheWeek from './components/days-of-the-week.svelte';
   import TasksList from './components/tasks-list.svelte';
@@ -9,7 +9,7 @@
 
   let currentFilter = 'All';
   tasks.update((items) => {
-    return { ...items, [$date.day]: [] };
+    return { ...items, [$date.day + '.' + $date.month + '.' + $date.year]: [] };
   });
 
   const handleAdd = (e) => {
@@ -19,12 +19,13 @@
     tasks.update((items) => {
       return {
         ...items,
-        [$date.day]: [
-          ...items[$date.day],
+        [$date.day + '.' + $date.month + '.' + $date.year]: [
+          ...items[$date.day + '.' + $date.month + '.' + $date.year],
           {
             id: uuidv4(),
             text: e.detail.text,
             done: false,
+            rating: 0,
           },
         ],
       };
@@ -35,7 +36,9 @@
     tasks.update((items) => {
       return {
         ...items,
-        [$date.day]: items[$date.day].filter((item) => {
+        [$date.day + '.' + $date.month + '.' + $date.year]: items[
+          $date.day + '.' + $date.month + '.' + $date.year
+        ].filter((item) => {
           return item.id !== e.detail.id;
         }),
       };
@@ -43,7 +46,7 @@
   };
 
   const handleClear = () => {
-    if ($tasks[$date.day].length === 0) {
+    if ($tasks[$date.day + '.' + $date.month + '.' + $date.year].length === 0) {
       return;
     }
     document.querySelector('.modal-dialog').style.display = 'block';
@@ -53,7 +56,10 @@
   const handleConfirmDel = (e) => {
     if (e.detail.conf === true) {
       tasks.update((items) => {
-        return { ...items, [$date.day]: [] };
+        return {
+          ...items,
+          [$date.day + '.' + $date.month + '.' + $date.year]: [],
+        };
       });
     }
     document.querySelector('.modal-dialog').style.display = 'none';
@@ -69,11 +75,18 @@
           dayOfTheWeek: new Date($date.year, $date.month, e.target.id).getDay(),
         };
       });
-      if ($tasks.hasOwnProperty([$date.day])) {
+      if (
+        $tasks.hasOwnProperty([
+          $date.day + '.' + $date.month + '.' + $date.year,
+        ])
+      ) {
         return;
       } else {
         tasks.update((items) => {
-          return { ...items, [$date.day]: [] };
+          return {
+            ...items,
+            [$date.day + '.' + $date.month + '.' + $date.year]: [],
+          };
         });
       }
     }
@@ -99,7 +112,9 @@
     tasks.update((items) => {
       return {
         ...items,
-        [$date.day]: items[$date.day].map((item) => {
+        [$date.day + '.' + $date.month + '.' + $date.year]: items[
+          $date.day + '.' + $date.month + '.' + $date.year
+        ].map((item) => {
           if (item.id === e.detail.id) {
             return { ...item, done: e.detail.checked };
           } else {
@@ -110,7 +125,33 @@
     });
   };
 
-  $: filteredTasks = filterTasks($tasks[$date.day], currentFilter);
+  const handleChangeRating = (e) => {
+    tasks.update((items) => {
+      return {
+        ...items,
+        [$date.day + '.' + $date.month + '.' + $date.year]: items[
+          $date.day + '.' + $date.month + '.' + $date.year
+        ].map((item) => {
+          if (item.id === e.detail.id) {
+            return { ...item, rating: e.detail.rating };
+          } else {
+            return item;
+          }
+        }),
+      };
+    });
+  };
+
+  // const handleCreateTask = () => {};
+  // const handleClose = () => {};
+
+  // const handleOpenBasket = () => {};
+  // const handleCloseBasket = () => {};
+
+  $: filteredTasks = filterTasks(
+    $tasks[$date.day + '.' + $date.month + '.' + $date.year],
+    currentFilter
+  );
 </script>
 
 <div class="container">
@@ -126,13 +167,31 @@
       on:remove={handleRemove}
       on:changeFilter={handleChangeFilter}
       on:changeDone={changeDoneHandler}
+      on:changeRating={handleChangeRating}
     />
     <EntryField on:click={handleClear} on:changeText={handleAdd} />
+    <button>Создать задачу</button>
   </main>
 </div>
 
 <ModalConfirm on:confirm={handleConfirmDel} />
 
+<!-- <div class="task-creation">
+  <h2>Create task</h2>
+  <div class="task-category">
+    <span>Категория:</span>
+    <select name="select">
+      <option value="value1" selected>Покупки</option>
+      <option value="value2">Хобби</option>
+      <option value="value3">Спорт</option>
+      <option value="value3">Работа</option>
+      <option value="value3">Образование</option>
+    </select>
+  </div>
+  <div>
+    <input placeholder="Описание" />
+  </div>
+</div> -->
 <style>
   .container {
     z-index: 0;

@@ -2,6 +2,8 @@ import { writable } from 'svelte/store';
 
 export const tasks = writable({});
 
+export const basket = writable({});
+
 export const date = writable({
   day: new Date().getDate(),
   month: new Date().getMonth(),
