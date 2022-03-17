@@ -8,8 +8,9 @@
   import ModalConfirm from './components/modal-confirm.svelte';
 
   let currentFilter = 'All';
+  let dateTask = `${$date.day}.${$date.month}.${$date.year}`;
   tasks.update((items) => {
-    return { ...items, [$date.day + '.' + $date.month + '.' + $date.year]: [] };
+    return { ...items, [dateTask]: [] };
   });
 
   const handleAdd = (e) => {
@@ -19,8 +20,8 @@
     tasks.update((items) => {
       return {
         ...items,
-        [$date.day + '.' + $date.month + '.' + $date.year]: [
-          ...items[$date.day + '.' + $date.month + '.' + $date.year],
+        [dateTask]: [
+          ...items[dateTask],
           {
             id: uuidv4(),
             text: e.detail.text,
@@ -36,9 +37,7 @@
     tasks.update((items) => {
       return {
         ...items,
-        [$date.day + '.' + $date.month + '.' + $date.year]: items[
-          $date.day + '.' + $date.month + '.' + $date.year
-        ].filter((item) => {
+        [dateTask]: items[dateTask].filter((item) => {
           return item.id !== e.detail.id;
         }),
       };
@@ -46,7 +45,7 @@
   };
 
   const handleClear = () => {
-    if ($tasks[$date.day + '.' + $date.month + '.' + $date.year].length === 0) {
+    if ($tasks[dateTask].length === 0) {
       return;
     }
     document.querySelector('.modal-dialog').style.display = 'block';
@@ -58,7 +57,7 @@
       tasks.update((items) => {
         return {
           ...items,
-          [$date.day + '.' + $date.month + '.' + $date.year]: [],
+          [dateTask]: [],
         };
       });
     }
@@ -75,17 +74,15 @@
           dayOfTheWeek: new Date($date.year, $date.month, e.target.id).getDay(),
         };
       });
-      if (
-        $tasks.hasOwnProperty([
-          $date.day + '.' + $date.month + '.' + $date.year,
-        ])
-      ) {
+      dateTask = `${$date.day}.${$date.month}.${$date.year}`;
+      if ($tasks.hasOwnProperty(dateTask)) {
+        console.log(123);
         return;
       } else {
         tasks.update((items) => {
           return {
             ...items,
-            [$date.day + '.' + $date.month + '.' + $date.year]: [],
+            [dateTask]: [],
           };
         });
       }
@@ -112,9 +109,7 @@
     tasks.update((items) => {
       return {
         ...items,
-        [$date.day + '.' + $date.month + '.' + $date.year]: items[
-          $date.day + '.' + $date.month + '.' + $date.year
-        ].map((item) => {
+        [dateTask]: items[dateTask].map((item) => {
           if (item.id === e.detail.id) {
             return { ...item, done: e.detail.checked };
           } else {
@@ -129,9 +124,7 @@
     tasks.update((items) => {
       return {
         ...items,
-        [$date.day + '.' + $date.month + '.' + $date.year]: items[
-          $date.day + '.' + $date.month + '.' + $date.year
-        ].map((item) => {
+        [dateTask]: items[dateTask].map((item) => {
           if (item.id === e.detail.id) {
             return { ...item, rating: e.detail.rating };
           } else {
@@ -140,18 +133,25 @@
         }),
       };
     });
+    tasks.update((items) => {
+      return {
+        ...items,
+        [dateTask]: items[dateTask].sort((a, b) => {
+          return b.rating - a.rating;
+        }),
+      };
+    });
   };
 
+  $: console.log(dateTask);
+  $: console.log($tasks);
   // const handleCreateTask = () => {};
   // const handleClose = () => {};
 
   // const handleOpenBasket = () => {};
   // const handleCloseBasket = () => {};
 
-  $: filteredTasks = filterTasks(
-    $tasks[$date.day + '.' + $date.month + '.' + $date.year],
-    currentFilter
-  );
+  $: filteredTasks = filterTasks($tasks[dateTask], currentFilter);
 </script>
 
 <div class="container">
