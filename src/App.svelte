@@ -76,7 +76,6 @@
       });
       dateTask = `${$date.day}.${$date.month}.${$date.year}`;
       if ($tasks.hasOwnProperty(dateTask)) {
-        console.log(123);
         return;
       } else {
         tasks.update((items) => {
@@ -143,8 +142,6 @@
     });
   };
 
-  $: console.log(dateTask);
-  $: console.log($tasks);
   // const handleCreateTask = () => {};
   // const handleClose = () => {};
 
@@ -176,7 +173,7 @@
 
 <ModalConfirm on:confirm={handleConfirmDel} />
 
-<!-- <div class="task-creation">
+<div class="task-creation">
   <h2>Create task</h2>
   <div class="task-category">
     <span>Категория:</span>
@@ -191,7 +188,8 @@
   <div>
     <input placeholder="Описание" />
   </div>
-</div> -->
+</div>
+
 <style>
   .container {
     z-index: 0;
