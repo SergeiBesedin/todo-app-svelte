@@ -6,8 +6,7 @@
   const calendar = [];
   let currentPosition = $date.day;
 
-  let totalDays = new Date(year, month + 1, 0).getDate();
-  for (let i = 1; i <= totalDays; i++) {
+  for (let i = 1; i <= $date.getTotalDays(); i++) {
     calendar.push(i);
   }
 

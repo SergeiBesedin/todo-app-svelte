@@ -1,16 +1,22 @@
+head,
 body {
-  position: relative;
   width: 100%;
-  height: 100%;
   background: linear-gradient(90deg, #afd9f7, #f0f2ff);
   box-sizing: border-box;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
 }
 
+body {
+  min-height: 100vh;
+}
+
 body,
 ul,
-p {
+p,
+h1,
+h2,
+h3 {
   padding: 0;
   margin: 0;
 }
@@ -19,8 +25,14 @@ li {
   list-style-type: none;
 }
 
-button {
-  cursor: pointer;
+button,
+select,
+input,
+textarea {
   border: none;
   outline: none;
+}
+
+button {
+  cursor: pointer;
 }

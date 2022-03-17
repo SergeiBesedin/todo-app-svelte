@@ -1,10 +1,10 @@
 <script>
-  import { v4 as uuidv4 } from 'uuid';
-  import { tasks, basket, date } from './store/store';
+  // import { v4 as uuidv4 } from 'uuid';
+  import { tasks, date } from './store/store';
   import CurrentDate from './components/current-date.svelte';
   import DaysOfTheWeek from './components/days-of-the-week.svelte';
+  import TaskCreation from './components/task-creation-window.svelte';
   import TasksList from './components/tasks-list.svelte';
-  import EntryField from './components/entry-field.svelte';
   import ModalConfirm from './components/modal-confirm.svelte';
 
   let currentFilter = 'All';
@@ -13,25 +13,25 @@
     return { ...items, [dateTask]: [] };
   });
 
-  const handleAdd = (e) => {
-    if (e.detail.text === '') {
-      return;
-    }
-    tasks.update((items) => {
-      return {
-        ...items,
-        [dateTask]: [
-          ...items[dateTask],
-          {
-            id: uuidv4(),
-            text: e.detail.text,
-            done: false,
-            rating: 0,
-          },
-        ],
-      };
-    });
-  };
+  // const handleAdd = (e) => {
+  //   if (e.detail.text === '') {
+  //     return;
+  //   }
+  //   tasks.update((items) => {
+  //     return {
+  //       ...items,
+  //       [dateTask]: [
+  //         ...items[dateTask],
+  //         {
+  //           id: uuidv4(),
+  //           text: e.detail.text,
+  //           done: false,
+  //           rating: 0,
+  //         },
+  //       ],
+  //     };
+  //   });
+  // };
 
   const handleRemove = (e) => {
     tasks.update((items) => {
@@ -142,8 +142,9 @@
     });
   };
 
-  // const handleCreateTask = () => {};
-  // const handleClose = () => {};
+  const handleOpenCreateTask = () => {
+    document.querySelector('.task-creation-modal').style.display = 'block';
+  };
 
   // const handleOpenBasket = () => {};
   // const handleCloseBasket = () => {};
@@ -151,53 +152,55 @@
   $: filteredTasks = filterTasks($tasks[dateTask], currentFilter);
 </script>
 
-<div class="container">
-  <header>
-    <CurrentDate />
-    <DaysOfTheWeek on:click={handleChangeDay} />
-  </header>
+<div class="wrapper">
+  <div class="container">
+    <div class="app">
+      <header>
+        <CurrentDate />
+        <DaysOfTheWeek on:click={handleChangeDay} />
+      </header>
 
-  <main>
-    <TasksList
-      {filteredTasks}
-      {currentFilter}
-      on:remove={handleRemove}
-      on:changeFilter={handleChangeFilter}
-      on:changeDone={changeDoneHandler}
-      on:changeRating={handleChangeRating}
-    />
-    <EntryField on:click={handleClear} on:changeText={handleAdd} />
-    <button>Создать задачу</button>
-  </main>
-</div>
+      <main>
+        <TasksList
+          {filteredTasks}
+          {currentFilter}
+          on:remove={handleRemove}
+          on:changeFilter={handleChangeFilter}
+          on:changeDone={changeDoneHandler}
+          on:changeRating={handleChangeRating}
+        />
 
-<ModalConfirm on:confirm={handleConfirmDel} />
-
-<div class="task-creation">
-  <h2>Create task</h2>
-  <div class="task-category">
-    <span>Категория:</span>
-    <select name="select">
-      <option value="value1" selected>Покупки</option>
-      <option value="value2">Хобби</option>
-      <option value="value3">Спорт</option>
-      <option value="value3">Работа</option>
-      <option value="value3">Образование</option>
-    </select>
+        <div class="entry-field">
+          <button on:click={handleOpenCreateTask}>Добавить задачу</button>
+          <button on:click={handleClear}>Очистить список</button>
+        </div>
+      </main>
+    </div>
+    <TaskCreation />
   </div>
-  <div>
-    <input placeholder="Описание" />
-  </div>
+  <ModalConfirm on:confirm={handleConfirmDel} />
 </div>
 
 <style>
+  .wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .container {
+    width: 500px;
+    padding: 10px;
+    margin-bottom: 100px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .app {
     z-index: 0;
     position: relative;
-    max-width: 470px;
-    margin: 0 auto;
     box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
-    margin-top: 100px;
   }
 
   header {
@@ -209,5 +212,23 @@
   main {
     background: #ffffff;
     border-radius: 0 0 5px 5px;
+  }
+
+  .entry-field {
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .entry-field button {
+    background: linear-gradient(0deg, #696eff, #f6a9ff);
+    color: #ffffff;
+    padding: 7px;
+    border-radius: 5px;
+  }
+
+  .entry-field button:active {
+    transform: scale(1.05);
+    transition-duration: 300ms;
   }
 </style>

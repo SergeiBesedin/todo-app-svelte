@@ -1,6 +1,6 @@
 <script>
   import Filters from './filters.svelte';
-  import TaskItem from './task.svelte';
+  import TaskItem from './task-item/task.svelte';
   export let filteredTasks;
   export let currentFilter;
 
