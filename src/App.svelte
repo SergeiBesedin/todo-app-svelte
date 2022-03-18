@@ -1,5 +1,5 @@
 <script>
-  // import { v4 as uuidv4 } from 'uuid';
+  import { v4 as uuidv4 } from 'uuid';
   import { tasks, date } from './store/store';
   import CurrentDate from './components/current-date.svelte';
   import DaysOfTheWeek from './components/days-of-the-week.svelte';
@@ -8,36 +8,41 @@
   import ModalConfirm from './components/modal-confirm.svelte';
 
   let currentFilter = 'All';
-  let dateTask = `${$date.day}.${$date.month}.${$date.year}`;
-  tasks.update((items) => {
-    return { ...items, [dateTask]: [] };
-  });
+  let fullDate = `${$date.day}.${$date.month + 1}.${$date.year}`;
 
-  // const handleAdd = (e) => {
-  //   if (e.detail.text === '') {
-  //     return;
-  //   }
-  //   tasks.update((items) => {
-  //     return {
-  //       ...items,
-  //       [dateTask]: [
-  //         ...items[dateTask],
-  //         {
-  //           id: uuidv4(),
-  //           text: e.detail.text,
-  //           done: false,
-  //           rating: 0,
-  //         },
-  //       ],
-  //     };
-  //   });
-  // };
+  const updateTasks = (date) => {
+    tasks.update((items) => {
+      return { ...items, [date]: [] };
+    });
+  };
+  updateTasks(fullDate);
+
+  const handleAddTask = (e) => {
+    fullDate = e.detail.dateTask;
+    updateTasks(fullDate);
+    tasks.update((items) => {
+      return {
+        ...items,
+        [fullDate]: [
+          ...items[fullDate],
+          {
+            id: uuidv4(),
+            time: e.detail.timeTask,
+            category: e.detail.selectedCategory,
+            description: e.detail.description,
+            done: false,
+            rating: 0,
+          },
+        ],
+      };
+    });
+  };
 
   const handleRemove = (e) => {
     tasks.update((items) => {
       return {
         ...items,
-        [dateTask]: items[dateTask].filter((item) => {
+        [fullDate]: items[fullDate].filter((item) => {
           return item.id !== e.detail.id;
         }),
       };
@@ -45,7 +50,7 @@
   };
 
   const handleClear = () => {
-    if ($tasks[dateTask].length === 0) {
+    if ($tasks[fullDate].length === 0) {
       return;
     }
     document.querySelector('.modal-dialog').style.display = 'block';
@@ -57,7 +62,7 @@
       tasks.update((items) => {
         return {
           ...items,
-          [dateTask]: [],
+          [fullDate]: [],
         };
       });
     }
@@ -74,16 +79,11 @@
           dayOfTheWeek: new Date($date.year, $date.month, e.target.id).getDay(),
         };
       });
-      dateTask = `${$date.day}.${$date.month}.${$date.year}`;
-      if ($tasks.hasOwnProperty(dateTask)) {
+      fullDate = `${$date.day}.${$date.month + 1}.${$date.year}`;
+      if ($tasks.hasOwnProperty(fullDate)) {
         return;
       } else {
-        tasks.update((items) => {
-          return {
-            ...items,
-            [dateTask]: [],
-          };
-        });
+        updateTasks(fullDate);
       }
     }
   };
@@ -108,7 +108,7 @@
     tasks.update((items) => {
       return {
         ...items,
-        [dateTask]: items[dateTask].map((item) => {
+        [fullDate]: items[fullDate].map((item) => {
           if (item.id === e.detail.id) {
             return { ...item, done: e.detail.checked };
           } else {
@@ -123,7 +123,7 @@
     tasks.update((items) => {
       return {
         ...items,
-        [dateTask]: items[dateTask].map((item) => {
+        [fullDate]: items[fullDate].map((item) => {
           if (item.id === e.detail.id) {
             return { ...item, rating: e.detail.rating };
           } else {
@@ -135,7 +135,7 @@
     tasks.update((items) => {
       return {
         ...items,
-        [dateTask]: items[dateTask].sort((a, b) => {
+        [fullDate]: items[fullDate].sort((a, b) => {
           return b.rating - a.rating;
         }),
       };
@@ -149,7 +149,7 @@
   // const handleOpenBasket = () => {};
   // const handleCloseBasket = () => {};
 
-  $: filteredTasks = filterTasks($tasks[dateTask], currentFilter);
+  $: filteredTasks = filterTasks($tasks[fullDate], currentFilter);
 </script>
 
 <div class="wrapper">
@@ -170,13 +170,17 @@
           on:changeRating={handleChangeRating}
         />
 
-        <div class="entry-field">
-          <button on:click={handleOpenCreateTask}>Добавить задачу</button>
-          <button on:click={handleClear}>Очистить список</button>
+        <div class="buttons">
+          <button class="btn-add" on:click={handleOpenCreateTask} />
+          <button
+            class="btn-clear"
+            class:visible={$tasks[fullDate].length > 0}
+            on:click={handleClear}>Очистить список</button
+          >
         </div>
       </main>
     </div>
-    <TaskCreation />
+    <TaskCreation on:addTask={handleAddTask} />
   </div>
   <ModalConfirm on:confirm={handleConfirmDel} />
 </div>
@@ -214,21 +218,33 @@
     border-radius: 0 0 5px 5px;
   }
 
-  .entry-field {
+  .buttons {
     padding: 5px 0;
     display: flex;
     justify-content: space-around;
   }
 
-  .entry-field button {
-    background: linear-gradient(0deg, #696eff, #f6a9ff);
-    color: #ffffff;
-    padding: 7px;
-    border-radius: 5px;
+  .btn-add {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff),
+      #696eff;
+    background-position: center;
+    background-size: 50% 2px, 2px 50%;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    transition-duration: 300ms;
   }
 
-  .entry-field button:active {
-    transform: scale(1.05);
-    transition-duration: 300ms;
+  .btn-add:hover {
+    transform: scale(1.1);
+  }
+
+  .btn-clear {
+    display: none;
+  }
+
+  .visible {
+    display: block;
   }
 </style>

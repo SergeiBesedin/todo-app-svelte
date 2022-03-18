@@ -4,6 +4,7 @@ export const tasks = writable({});
 
 export const createTaskData = writable({
   category: ['Shopping', 'Hobby', 'Sport', 'Education', 'Job', 'Housework'],
+  descriptionTask: '',
 });
 
 export const basket = writable({});

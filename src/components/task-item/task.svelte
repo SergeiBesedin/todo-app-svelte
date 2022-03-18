@@ -3,8 +3,10 @@
   import Star from './star.svelte';
   export let done;
   export let id;
-  export let text;
+  export let description;
   export let rating;
+  export let time;
+  export let category;
 
   const dispatch = createEventDispatcher();
   const numTotalStars = 3;
@@ -14,7 +16,6 @@
   };
 
   const handleChangeRating = (e) => {
-    console.log(e.target.value);
     dispatch('changeRating', { rating: e.target.value, id });
   };
 
@@ -23,9 +24,9 @@
   };
 </script>
 
-<div class="task">
+<!-- <div class="task">
   <input type="checkbox" checked={done} on:input={(e) => handleDoneChange(e)} />
-  <p>{text}</p>
+  <p>{description}</p>
   <div class="raiting">
     <div class="raiting-items">
       {#each Array.from({ length: numTotalStars }) as star, i (id + i)}
@@ -38,6 +39,30 @@
       {/each}
     </div>
   </div>
+  <button on:click={() => handleRemove(id)}>Удалить</button>
+</div> -->
+
+<div class="task">
+  <div class="task-container">
+    <div><span>{time}</span> <span>{category}</span></div>
+    <div>
+      <p>{description}</p>
+    </div>
+  </div>
+
+  <div class="raiting">
+    <div class="raiting-items">
+      {#each Array.from({ length: numTotalStars }) as star, i (id + i)}
+        <Star
+          num={i + 1}
+          {id}
+          {rating}
+          on:input={(e) => handleChangeRating(e)}
+        />
+      {/each}
+    </div>
+  </div>
+  <input type="checkbox" checked={done} on:input={(e) => handleDoneChange(e)} />
   <button on:click={() => handleRemove(id)}>Удалить</button>
 </div>
 
