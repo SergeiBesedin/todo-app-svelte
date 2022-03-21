@@ -26,6 +26,7 @@
       day: selectedDay,
     });
     handleCloseCreateTask();
+    description = '';
   };
 
   const handleCloseCreateTask = () => {

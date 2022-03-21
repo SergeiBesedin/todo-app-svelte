@@ -1,11 +1,12 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
-  import { tasks, date } from './store/store';
+  import { tasks, createTaskData, date } from './store/store';
   import CurrentDate from './components/current-date.svelte';
   import DaysOfTheWeek from './components/days-of-the-week.svelte';
   import TaskCreation from './components/task-creation-window.svelte';
   import TasksList from './components/tasks-list.svelte';
   import ModalConfirm from './components/modal-confirm.svelte';
+  import clearIcon from './assets/icons/clear.png';
 
   let currentFilter = 'All';
   let fullDate = `${$date.day}.${$date.month + 1}.${$date.year}`;
@@ -39,6 +40,9 @@
           },
         ],
       };
+    });
+    createTaskData.update((items) => {
+      return { ...items, descriptionTask: '' };
     });
   };
 
@@ -170,11 +174,13 @@
 
         <div class="buttons">
           <button class="btn-add" on:click={handleOpenCreateTask} />
-          <button
+          <div
             class="btn-clear"
             class:visible={$tasks[fullDate].length > 0}
-            on:click={handleClear}>Очистить список</button
+            on:click={handleClear}
           >
+            <img src={clearIcon} alt="clear" />
+          </div>
         </div>
       </main>
     </div>
@@ -239,7 +245,19 @@
   }
 
   .btn-clear {
+    width: 50px;
+    height: 50px;
+    background: #c55151;
+    border-radius: 50%;
+    cursor: pointer;
+    text-align: center;
     display: none;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+
+  .btn-clear img {
+    width: 35px;
   }
 
   .visible {
