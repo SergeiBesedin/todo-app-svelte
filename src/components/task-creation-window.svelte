@@ -9,6 +9,7 @@
   let selectedHour = $date.hour;
   let selectedMinute = $date.minutes;
   let selectedCategory = $date.category;
+  let selectedColor = $createTaskData.markers[0];
   let description = $createTaskData.descriptionTask;
   $: totalDays = $date.getTotalDays();
 
@@ -20,6 +21,7 @@
       dateTask,
       timeTask,
       selectedCategory,
+      selectedColor,
       description,
       day: selectedDay,
     });
@@ -83,6 +85,16 @@
           {/each}
         </select>
       </div>
+
+      <div class="task-marker">
+        <span>Marker</span>
+        <select name="select" bind:value={selectedColor}>
+          {#each $createTaskData.markers as marker}
+            <option value={marker} style={`color: ${marker}`}>{marker}</option>
+          {/each}
+        </select>
+      </div>
+
       <div class="task-description">
         <textarea
           bind:value={description}
@@ -165,6 +177,7 @@
   .task-time,
   .task-category,
   .task-description,
+  .task-marker,
   .task-action {
     border-bottom: 1px solid #ffffff;
     padding-bottom: 10px;
@@ -172,17 +185,14 @@
     text-align: center;
   }
 
-  .task-category {
+  .task-marker {
     border: none;
     padding: 0;
   }
 
   .task-description {
-    border: none;
-  }
-
-  .task-description {
     padding: 0;
+    border: none;
   }
 
   .task-description textarea {

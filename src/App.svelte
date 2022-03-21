@@ -32,6 +32,7 @@
             id: uuidv4(),
             time: e.detail.timeTask,
             category: e.detail.selectedCategory,
+            marker: e.detail.selectedColor,
             description: e.detail.description,
             done: false,
             rating: 0,

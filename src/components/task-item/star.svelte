@@ -5,7 +5,7 @@
 </script>
 
 <input
-  id={`rating__${id + num}`}
+  id={`rating-${id + num}`}
   type="radio"
   value={num}
   name="rating"
@@ -13,7 +13,7 @@
   on:input
 />
 <label
-  for={`rating__${id + num}`}
+  for={`rating-${id + num}`}
   class="rating-label"
   class:active={rating >= num}
 />
@@ -26,6 +26,7 @@
     top: 0;
     left: 0;
     opacity: 0;
+    margin: 0;
     visibility: hidden;
   }
 

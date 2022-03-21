@@ -7,6 +7,7 @@
   export let rating;
   export let time;
   export let category;
+  export let marker;
 
   const dispatch = createEventDispatcher();
   const numTotalStars = 3;
@@ -27,30 +28,42 @@
 <div class="task">
   <div class="task-container">
     <div class="task-left">
-      <p>{description}</p>
-      <span>{category}</span>
+      <div class="task-marker" style={`background: ${marker}`} />
+      <div>
+        <p>{description}</p>
+        <span>{category}</span>
+      </div>
     </div>
 
     <div class="task-right">
-      <p>{time}</p>
-      <div class="task-raiting">
-        <div class="raiting-items">
-          {#each Array.from({ length: numTotalStars }) as star, i (id + i)}
-            <Star
-              num={i + 1}
-              {id}
-              {rating}
-              on:input={(e) => handleChangeRating(e)}
-            />
-          {/each}
+      <div class="task-right-container">
+        <p>{time}</p>
+        <div class="task-raiting">
+          <div class="raiting-items">
+            {#each Array.from({ length: numTotalStars }) as star, i (id + i)}
+              <Star
+                num={i + 1}
+                {id}
+                {rating}
+                on:input={(e) => handleChangeRating(e)}
+              />
+            {/each}
+          </div>
         </div>
       </div>
-      <input
-        type="checkbox"
-        checked={done}
-        on:input={(e) => handleDoneChange(e)}
-      />
-      <button on:click={() => handleRemove(id)}>X</button>
+      <div class="task-actions">
+        <div class="task-check">
+          <input
+            id={`checkbox-${id}`}
+            type="checkbox"
+            checked={done}
+            class="custom-checkbox"
+            on:input={(e) => handleDoneChange(e)}
+          />
+          <label for={`checkbox-${id}`} />
+        </div>
+        <div class="task-remove" on:click={() => handleRemove(id)} />
+      </div>
     </div>
   </div>
 </div>
@@ -69,10 +82,9 @@
     padding: 7px;
   }
 
-  .task-left {
-  }
-
+  .task-left,
   .task-right {
+    display: flex;
   }
 
   .task-left p {
@@ -87,15 +99,22 @@
   }
 
   .task-right p {
+    display: inline;
+    text-align: right;
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 5px;
   }
 
-  .task-right input {
-    position: absolute;
-    top: 0px;
-    right: 0px;
+  .task-right-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .task-marker {
+    width: 5px;
+    height: 100%;
+    margin-right: 15px;
   }
 
   .task-raiting {
@@ -117,6 +136,76 @@
     left: 0;
     display: flex;
     overflow: hidden;
+  }
+
+  .task-actions {
+    width: 25px;
+  }
+
+  .task-check {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .task-check input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: -1;
+    opacity: 0;
+  }
+
+  .custom-checkbox + label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background-color: #157ef7;
+    background-repeat: no-repeat;
+    background-size: 45% 45%;
+    background-position: center;
+    border-radius: 0 0 0 100%;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+    opacity: 0.3;
+  }
+
+  .custom-checkbox:checked + label::before {
+    opacity: 1;
+  }
+
+  .task-remove {
+    position: absolute;
+    bottom: 0;
+    right: -7px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: opacity ease 0.5s;
+  }
+
+  .task-remove:hover {
+    opacity: 0.5;
+  }
+
+  .task-remove::before,
+  .task-remove::after {
+    content: '';
+    position: absolute;
+    top: 13px;
+    display: block;
+    width: 15px;
+    height: 3px;
+    background: #e92d2d;
+  }
+
+  .task-remove::before {
+    transform: rotate(45deg);
+  }
+
+  .task-remove::after {
+    transform: rotate(-45deg);
   }
 
   .raiting-label:hover,
