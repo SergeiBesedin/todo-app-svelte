@@ -12,7 +12,8 @@
   let description = $createTaskData.descriptionTask;
   $: totalDays = $date.getTotalDays();
 
-  const handleAddTask = () => {
+  const handleAddTask = (e) => {
+    e.preventDefault();
     let dateTask = `${selectedDay}.${selectedMonth}.${selectedYear}`;
     let timeTask = `${selectedHour}:${selectedMinute}`;
     dispatch('addTask', {
@@ -31,70 +32,74 @@
 
 <div class="task-creation-modal">
   <div class="task-creation-close" on:click={handleCloseCreateTask} />
+  <form on:submit={handleAddTask}>
+    <div class="task-creation">
+      <h2>Create task</h2>
+      <div class="task-date">
+        <span>Date:</span>
+        <select name="select" bind:value={selectedDay}>
+          {#each Array.from({ length: totalDays }) as day, i}
+            <option value={i + 1}>{i + 1}</option>
+          {/each}
+        </select>
+        -
+        <select
+          name="select"
+          bind:value={selectedMonth}
+          on:change={(e) =>
+            (totalDays = $date.getTotalDays(e.target.value - 1))}
+        >
+          {#each $date.months as month, i}
+            <option value={i + 1}>{month}</option>
+          {/each}
+        </select>
+        -
+        <select name="select" bind:value={selectedYear}>
+          <option value={selectedYear} selected>{$date.year}</option>
+        </select>
+      </div>
 
-  <div class="task-creation">
-    <h2>Create task</h2>
+      <div class="task-time">
+        <span>Time:</span>
+        <select name="select" bind:value={selectedHour}>
+          {#each Array.from({ length: 24 }) as hour, i}
+            <option value={i + 1}>{i + 1}</option>
+          {/each}
+        </select>
+        :
+        <select name="select" bind:value={selectedMinute}>
+          {#each Array.from({ length: 61 }) as minutes, i}
+            <option value={i}>{i}</option>
+          {/each}
+        </select>
+      </div>
 
-    <div class="task-date">
-      <span>Date:</span>
-      <select name="select" bind:value={selectedDay}>
-        {#each Array.from({ length: totalDays }) as day, i}
-          <option value={i + 1}>{i + 1}</option>
-        {/each}
-      </select>
-      -
-      <select
-        name="select"
-        bind:value={selectedMonth}
-        on:change={(e) => (totalDays = $date.getTotalDays(e.target.value - 1))}
-      >
-        {#each $date.months as month, i}
-          <option value={i + 1}>{month}</option>
-        {/each}
-      </select>
-      -
-      <select name="select" bind:value={selectedYear}>
-        <option value={selectedYear} selected>{$date.year}</option>
-      </select>
-    </div>
+      <div class="task-category">
+        <span>Category:</span>
+        <select name="select" bind:value={selectedCategory}>
+          {#each $createTaskData.category as category}
+            <option value={category}>{category}</option>
+          {/each}
+        </select>
+      </div>
+      <div class="task-description">
+        <textarea
+          bind:value={description}
+          maxlength="30"
+          minlength="5"
+          required
+          name="description"
+          placeholder="Description"
+        />
+      </div>
 
-    <div class="task-time">
-      <span>Time:</span>
-      <select name="select" bind:value={selectedHour}>
-        {#each Array.from({ length: 24 }) as hour, i}
-          <option value={i + 1}>{i + 1}</option>
-        {/each}
-      </select>
-      :
-      <select name="select" bind:value={selectedMinute}>
-        {#each Array.from({ length: 61 }) as minutes, i}
-          <option value={i}>{i}</option>
-        {/each}
-      </select>
-    </div>
-
-    <div class="task-category">
-      <span>Category:</span>
-      <select name="select" bind:value={selectedCategory}>
-        {#each $createTaskData.category as category}
-          <option value={category}>{category}</option>
-        {/each}
-      </select>
-    </div>
-    <div class="task-description">
-      <textarea
-        bind:value={description}
-        name="description"
-        placeholder="Description"
-      />
-    </div>
-
-    <div class="task-action">
-      <div class="task-add" on:click={handleAddTask}>
-        <div class="check" />
+      <div class="task-action">
+        <button class="task-add" type="submit">
+          <div class="check" />
+        </button>
       </div>
     </div>
-  </div>
+  </form>
 </div>
 
 <style>
@@ -179,6 +184,17 @@
     padding: 0;
   }
 
+  .task-description textarea {
+    resize: none;
+    border: none;
+    background: #f0efef;
+    padding: 7px;
+    width: 100%;
+    height: 170px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+
   .task-action {
     border: none;
     padding: 0;
@@ -218,16 +234,5 @@
     padding: 10px;
     font-size: 18px;
     border-radius: 5px;
-  }
-
-  textarea {
-    resize: none;
-    border: none;
-    background: #f0efef;
-    padding: 7px;
-    width: 100%;
-    height: 170px;
-    box-sizing: border-box;
-    font-size: 14px;
   }
 </style>
