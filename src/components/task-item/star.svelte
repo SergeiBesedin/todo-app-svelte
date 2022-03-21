@@ -33,7 +33,7 @@
     flex: 0 0 33.333%;
     height: 100%;
     cursor: pointer;
-    color: #ffffff;
+    color: #d1d1d1;
   }
 
   .rating-label::before {

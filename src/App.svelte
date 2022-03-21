@@ -11,6 +11,9 @@
   let fullDate = `${$date.day}.${$date.month + 1}.${$date.year}`;
 
   const updateTasks = (date) => {
+    if ($tasks.hasOwnProperty(date)) {
+      return;
+    }
     tasks.update((items) => {
       return { ...items, [date]: [] };
     });
@@ -71,21 +74,15 @@
   };
 
   const handleChangeDay = (e) => {
-    if (e.target.tagName === 'LI') {
-      date.update((value) => {
-        return {
-          ...value,
-          day: Number(e.target.id),
-          dayOfTheWeek: new Date($date.year, $date.month, e.target.id).getDay(),
-        };
-      });
-      fullDate = `${$date.day}.${$date.month + 1}.${$date.year}`;
-      if ($tasks.hasOwnProperty(fullDate)) {
-        return;
-      } else {
-        updateTasks(fullDate);
-      }
-    }
+    date.update((value) => {
+      return {
+        ...value,
+        day: Number(e.detail.day),
+        dayOfTheWeek: new Date($date.year, $date.month, e.detail.day).getDay(),
+      };
+    });
+    fullDate = `${$date.day}.${$date.month + 1}.${$date.year}`;
+    updateTasks(fullDate);
   };
 
   const handleChangeFilter = (e) => {
@@ -157,7 +154,7 @@
     <div class="app">
       <header>
         <CurrentDate />
-        <DaysOfTheWeek on:click={handleChangeDay} />
+        <DaysOfTheWeek on:changeDay={handleChangeDay} />
       </header>
 
       <main>
@@ -180,7 +177,7 @@
         </div>
       </main>
     </div>
-    <TaskCreation on:addTask={handleAddTask} />
+    <TaskCreation on:addTask={handleChangeDay} on:addTask={handleAddTask} />
   </div>
   <ModalConfirm on:confirm={handleConfirmDel} />
 </div>

@@ -21,6 +21,7 @@
       timeTask,
       selectedCategory,
       description,
+      day: selectedDay,
     });
     handleCloseCreateTask();
   };

@@ -24,67 +24,87 @@
   };
 </script>
 
-<!-- <div class="task">
-  <input type="checkbox" checked={done} on:input={(e) => handleDoneChange(e)} />
-  <p>{description}</p>
-  <div class="raiting">
-    <div class="raiting-items">
-      {#each Array.from({ length: numTotalStars }) as star, i (id + i)}
-        <Star
-          num={i + 1}
-          {id}
-          {rating}
-          on:input={(e) => handleChangeRating(e)}
-        />
-      {/each}
-    </div>
-  </div>
-  <button on:click={() => handleRemove(id)}>Удалить</button>
-</div> -->
-
 <div class="task">
   <div class="task-container">
-    <div><span>{time}</span> <span>{category}</span></div>
-    <div>
+    <div class="task-left">
       <p>{description}</p>
+      <span>{category}</span>
     </div>
-  </div>
 
-  <div class="raiting">
-    <div class="raiting-items">
-      {#each Array.from({ length: numTotalStars }) as star, i (id + i)}
-        <Star
-          num={i + 1}
-          {id}
-          {rating}
-          on:input={(e) => handleChangeRating(e)}
-        />
-      {/each}
+    <div class="task-right">
+      <p>{time}</p>
+      <div class="task-raiting">
+        <div class="raiting-items">
+          {#each Array.from({ length: numTotalStars }) as star, i (id + i)}
+            <Star
+              num={i + 1}
+              {id}
+              {rating}
+              on:input={(e) => handleChangeRating(e)}
+            />
+          {/each}
+        </div>
+      </div>
+      <input
+        type="checkbox"
+        checked={done}
+        on:input={(e) => handleDoneChange(e)}
+      />
+      <button on:click={() => handleRemove(id)}>X</button>
     </div>
   </div>
-  <input type="checkbox" checked={done} on:input={(e) => handleDoneChange(e)} />
-  <button on:click={() => handleRemove(id)}>Удалить</button>
 </div>
 
 <style>
   .task {
-    display: flex;
-    justify-content: space-around;
-    border-bottom: 1.5px solid #d1d1d1;
-    padding: 15px;
+    width: 90%;
+    margin: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
   }
 
-  .task p {
-    width: 300px;
-  }
-
-  .raiting {
+  .task-container {
     position: relative;
-    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 7px;
+  }
+
+  .task-left {
+  }
+
+  .task-right {
+  }
+
+  .task-left p {
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .task-left span {
+    font-size: 14px;
+    opacity: 0.7;
+  }
+
+  .task-right p {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .task-right input {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+
+  .task-raiting {
+    position: relative;
+    font-size: 18px;
     display: inline-block;
   }
 
-  .raiting::before {
+  .task-raiting::before {
     content: '★★★';
     display: block;
   }

@@ -1,7 +1,9 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
   import { onMount } from 'svelte';
   import { date } from '../store/store';
 
+  const dispatch = createEventDispatcher();
   const { year, month, daysOfTheWeek } = $date;
   const calendar = [];
   let currentPosition = $date.day;
@@ -9,6 +11,12 @@
   for (let i = 1; i <= $date.getTotalDays(); i++) {
     calendar.push(i);
   }
+
+  const clickByDayHandler = (e) => {
+    if (e.target.tagName === 'LI') {
+      dispatch('changeDay', { day: e.target.id });
+    }
+  };
 
   const clickToBtnHandler = (position) => {
     currentPosition = position;
@@ -33,7 +41,7 @@
     on:click={() => clickToBtnHandler(currentPosition - 1)}>Prev</button
   >
   <div class="container">
-    <ul class="days-list" on:click>
+    <ul class="days-list" on:click={(e) => clickByDayHandler(e)}>
       {#each calendar as number, i}
         <li id={number} class:active={$date.day == number}>
           {daysOfTheWeek[new Date(year, month, calendar[i]).getDay()]}

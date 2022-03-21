@@ -24,16 +24,19 @@
 
 <style>
   .filters {
-    display: flex;
-    justify-content: space-around;
-    padding: 5px 0;
+    padding: 5px;
     background: #d1d1d1;
     color: #ffffff;
     font-weight: 600;
+    border-radius: 0 0 5px 5px;
   }
 
   .filters span {
     cursor: pointer;
+  }
+
+  .filters span:not(:last-child) {
+    margin-right: 10px;
   }
 
   .active {
