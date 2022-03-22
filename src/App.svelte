@@ -2,6 +2,7 @@
   import { v4 as uuidv4 } from 'uuid';
   import { tasks, createTaskData, date } from './store/store';
   import CurrentDate from './components/current-date.svelte';
+  import Calendar from './components/calendar.svelte';
   import DaysOfTheWeek from './components/days-of-the-week.svelte';
   import TaskCreation from './components/task-creation-window.svelte';
   import TasksList from './components/tasks-list.svelte';
@@ -158,7 +159,10 @@
   <div class="container">
     <div class="app">
       <header>
-        <CurrentDate />
+        <div class="header-date">
+          <CurrentDate />
+          <Calendar />
+        </div>
         <DaysOfTheWeek on:changeDay={handleChangeDay} />
       </header>
 
@@ -199,7 +203,7 @@
 
   .container {
     width: 500px;
-    padding: 10px;
+    padding: 5px;
     margin-bottom: 100px;
     margin: 0 auto;
     position: relative;
@@ -217,6 +221,13 @@
     border-radius: 5px 5px 0 0;
   }
 
+  .header-date {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+  }
+
   main {
     background: #ffffff;
     border-radius: 0 0 5px 5px;
@@ -229,26 +240,29 @@
   }
 
   .btn-add {
-    width: 50px;
-    height: 50px;
     background: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff),
       #696eff;
     background-position: center;
     background-size: 50% 2px, 2px 50%;
     background-repeat: no-repeat;
-    border-radius: 50%;
-    transition-duration: 300ms;
   }
 
-  .btn-add:hover {
+  .btn-add:hover,
+  .btn-clear:hover {
     transform: scale(1.1);
   }
 
+  .btn-add,
   .btn-clear {
     width: 50px;
     height: 50px;
-    background: #c55151;
+    box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
+    transition-duration: 300ms;
     border-radius: 50%;
+  }
+
+  .btn-clear {
+    background: #c55151;
     cursor: pointer;
     text-align: center;
     display: none;

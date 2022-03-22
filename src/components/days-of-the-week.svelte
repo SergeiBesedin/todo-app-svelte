@@ -2,6 +2,8 @@
   import { createEventDispatcher } from 'svelte';
   import { onMount } from 'svelte';
   import { date } from '../store/store';
+  import arrowNext from '../assets/icons/next-arrow.png';
+  import arrowPrev from '../assets/icons/prev-arrow.png';
 
   const dispatch = createEventDispatcher();
   const { year, month, daysOfTheWeek } = $date;
@@ -35,11 +37,13 @@
 </script>
 
 <div class="days">
-  <button
+  <div
     class="btn-prev"
     class:disabled={currentPosition === 1}
-    on:click={() => clickToBtnHandler(currentPosition - 1)}>Prev</button
+    on:click={() => clickToBtnHandler(currentPosition - 1)}
   >
+    <img src={arrowPrev} alt="arrow-prev" />
+  </div>
   <div class="container">
     <ul class="days-list" on:click={(e) => clickByDayHandler(e)}>
       {#each calendar as number, i}
@@ -50,11 +54,13 @@
       {/each}
     </ul>
   </div>
-  <button
+  <div
     class="btn-next"
     class:disabled={currentPosition === calendar.length}
-    on:click={() => clickToBtnHandler(currentPosition + 1)}>Next</button
+    on:click={() => clickToBtnHandler(currentPosition + 1)}
   >
+    <img src={arrowNext} alt="arrow-next" />
+  </div>
 </div>
 
 <style>
@@ -98,10 +104,12 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-weight: 600;
-    color: #ffffff;
-    background: none;
-    padding: 0;
+    cursor: pointer;
+  }
+
+  .btn-next img,
+  .btn-prev img {
+    width: 24px;
   }
 
   .btn-next {
@@ -114,8 +122,6 @@
 
   .disabled {
     pointer-events: none;
-    background-color: transparent;
-    color: #d1d1d1;
   }
 
   @media (max-width: 460px) {

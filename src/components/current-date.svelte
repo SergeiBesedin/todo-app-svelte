@@ -10,7 +10,6 @@
 
 <style>
   .date {
-    margin-left: 25px;
     display: grid;
     max-width: 160px;
     grid-template-areas:
@@ -23,6 +22,7 @@
     font-size: 50px;
     grid-area: A;
     font-weight: 600;
+    padding-right: 10px;
   }
 
   .date :nth-child(2) {
