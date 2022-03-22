@@ -5,7 +5,7 @@
 
   const dispatch = createEventDispatcher();
 
-  const handleChangeMonth = (e) => {
+  const clickByMonthHandler = (e) => {
     if (e.target.tagName === 'SPAN') {
       dispatch('changeDate', { day: 1, month: e.target.id });
     }
@@ -15,7 +15,7 @@
 <div class="calendar">
   <div class="calendar-window">
     <div class="calendar-year">{$date.year} г.</div>
-    <div class="calendar-months" on:click={handleChangeMonth}>
+    <div class="calendar-months" on:click={clickByMonthHandler}>
       {#each $date.months as month, i}
         <span id={i} class:active-month={month === $date.getMonth()}
           >{month}</span

@@ -11,7 +11,7 @@
 
   let currentFilter = 'All';
   let calendarOpen = false;
-  let fullDate = `${$date.day}.${$date.month + 1}.${$date.year}`;
+  let fullDate = `${$date.day}.${$date.month}.${$date.year}`;
 
   const updateTasks = (date) => {
     if ($tasks.hasOwnProperty(date)) {
@@ -81,7 +81,9 @@
   };
 
   const handleChangeDate = (e) => {
-    openCalendar();
+    if (calendarOpen) {
+      openCalendar();
+    }
     date.update((value) => {
       return {
         ...value,
@@ -90,7 +92,7 @@
         dayOfTheWeek: new Date($date.year, $date.month, e.detail.day).getDay(),
       };
     });
-    fullDate = `${$date.day}.${$date.month + 1}.${$date.year}`;
+    fullDate = `${$date.day}.${$date.month}.${$date.year}`;
     updateTasks(fullDate);
   };
 
@@ -166,7 +168,6 @@
 
   // const handleOpenBasket = () => {};
   // const handleCloseBasket = () => {};
-  $: console.log($tasks);
 
   $: filteredTasks = filterTasks($tasks[fullDate], currentFilter);
 </script>

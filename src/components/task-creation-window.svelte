@@ -4,7 +4,7 @@
 
   const dispatch = createEventDispatcher();
   let selectedYear = $date.year;
-  let selectedMonth = $date.month + 1;
+  let selectedMonth = $date.month;
   let selectedDay = $date.day;
   let selectedHour = $date.hour;
   let selectedMinute = $date.minutes;
@@ -42,6 +42,7 @@
       <h2>Create task</h2>
       <div class="task-date">
         <span>Date:</span>
+
         <select name="select" bind:value={selectedDay}>
           {#each Array.from({ length: totalDays }) as day, i}
             <option value={i + 1}>{i + 1}</option>
@@ -52,10 +53,10 @@
           name="select"
           bind:value={selectedMonth}
           on:change={(e) =>
-            (totalDays = $date.getTotalDays(e.target.value - 1))}
+            (totalDays = $date.getTotalDays(Number(e.target.value)))}
         >
           {#each $date.months as month, i}
-            <option value={i + 1}>{month}</option>
+            <option value={i}>{month}</option>
           {/each}
         </select>
         -

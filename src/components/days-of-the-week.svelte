@@ -1,18 +1,13 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { onMount } from 'svelte';
+  import { onMount, afterUpdate } from 'svelte';
   import { date } from '../store/store';
   import arrowNext from '../assets/icons/next-arrow.png';
   import arrowPrev from '../assets/icons/prev-arrow.png';
 
   const dispatch = createEventDispatcher();
-  const { year, month, daysOfTheWeek } = $date;
-  const calendar = [];
-  let currentPosition = $date.day;
-
-  for (let i = 1; i <= $date.getTotalDays(); i++) {
-    calendar.push(i);
-  }
+  $: currentPosition = $date.day;
+  $: totalDays = $date.getTotalDays();
 
   const clickByDayHandler = (e) => {
     if (e.target.tagName === 'LI') {
@@ -34,6 +29,10 @@
   onMount(() => {
     scrollCarousel();
   });
+
+  afterUpdate(() => {
+    scrollCarousel();
+  });
 </script>
 
 <div class="days">
@@ -46,17 +45,19 @@
   </div>
   <div class="container">
     <ul class="days-list" on:click={(e) => clickByDayHandler(e)}>
-      {#each calendar as number, i}
-        <li id={number} class:active={$date.day == number}>
-          {daysOfTheWeek[new Date(year, month, calendar[i]).getDay()]}
-          {number}
+      {#each Array.from({ length: totalDays }) as number, i}
+        <li id={i + 1} class:active={$date.day == i + 1}>
+          {$date.daysOfTheWeek[
+            new Date($date.year, $date.month, i + 1).getDay()
+          ]}
+          {i + 1}
         </li>
       {/each}
     </ul>
   </div>
   <div
     class="btn-next"
-    class:disabled={currentPosition === calendar.length}
+    class:disabled={currentPosition === totalDays}
     on:click={() => clickToBtnHandler(currentPosition + 1)}
   >
     <img src={arrowNext} alt="arrow-next" />
@@ -67,6 +68,7 @@
   .days {
     position: relative;
     overflow: hidden;
+    user-select: none;
   }
 
   .container {
