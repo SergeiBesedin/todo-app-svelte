@@ -284,7 +284,7 @@
     cursor: pointer;
     text-align: center;
     display: none;
-    padding: 6px;
+    padding: 6px 10px;
     box-sizing: border-box;
   }
 

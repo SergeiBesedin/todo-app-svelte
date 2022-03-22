@@ -109,17 +109,23 @@
     cursor: pointer;
   }
 
-  .btn-next img,
-  .btn-prev img {
-    width: 24px;
-  }
-
   .btn-next {
     right: 0px;
   }
 
   .btn-prev {
     left: 0;
+  }
+
+  .btn-next img,
+  .btn-prev img {
+    width: 24px;
+    transition-duration: 200ms;
+  }
+
+  .btn-next img:active,
+  .btn-prev img:active {
+    transform: scale(1.1);
   }
 
   .disabled {

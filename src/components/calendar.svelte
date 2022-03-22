@@ -43,10 +43,11 @@
     max-width: 220px;
     margin-right: 10px;
     color: #000000;
+    box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
   }
 
   .calendar-year {
-    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid #f6a9ff;
     text-align: center;
     padding: 3px;
     font-weight: 600;
