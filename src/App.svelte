@@ -10,6 +10,7 @@
   import clearIcon from './assets/icons/clear.png';
 
   let currentFilter = 'All';
+  let calendarOpen = false;
   let fullDate = `${$date.day}.${$date.month + 1}.${$date.year}`;
 
   const updateTasks = (date) => {
@@ -79,11 +80,13 @@
     document.querySelector('.container').style.zIndex = '0';
   };
 
-  const handleChangeDay = (e) => {
+  const handleChangeDate = (e) => {
+    openCalendar();
     date.update((value) => {
       return {
         ...value,
         day: Number(e.detail.day),
+        month: Number(e.detail.month),
         dayOfTheWeek: new Date($date.year, $date.month, e.detail.day).getDay(),
       };
     });
@@ -146,11 +149,24 @@
   };
 
   const handleOpenCreateTask = () => {
+    if (calendarOpen) {
+      openCalendar();
+    }
     document.querySelector('.task-creation-modal').style.display = 'block';
+  };
+
+  const openCalendar = () => {
+    calendarOpen = !calendarOpen;
+    if (calendarOpen) {
+      document.querySelector('.calendar-window').style.display = 'block';
+    } else {
+      document.querySelector('.calendar-window').style.display = 'none';
+    }
   };
 
   // const handleOpenBasket = () => {};
   // const handleCloseBasket = () => {};
+  $: console.log($tasks);
 
   $: filteredTasks = filterTasks($tasks[fullDate], currentFilter);
 </script>
@@ -161,9 +177,9 @@
       <header>
         <div class="header-date">
           <CurrentDate />
-          <Calendar />
+          <Calendar on:click={openCalendar} on:changeDate={handleChangeDate} />
         </div>
-        <DaysOfTheWeek on:changeDay={handleChangeDay} />
+        <DaysOfTheWeek on:changeDate={handleChangeDate} />
       </header>
 
       <main>
@@ -188,7 +204,7 @@
         </div>
       </main>
     </div>
-    <TaskCreation on:addTask={handleChangeDay} on:addTask={handleAddTask} />
+    <TaskCreation on:addTask={handleChangeDate} on:addTask={handleAddTask} />
   </div>
   <ModalConfirm on:confirm={handleConfirmDel} />
 </div>
@@ -226,6 +242,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
+    margin-bottom: 5px;
   }
 
   main {

@@ -16,7 +16,7 @@
 
   const clickByDayHandler = (e) => {
     if (e.target.tagName === 'LI') {
-      dispatch('changeDay', { day: e.target.id });
+      dispatch('changeDate', { day: e.target.id, month: $date.month });
     }
   };
 

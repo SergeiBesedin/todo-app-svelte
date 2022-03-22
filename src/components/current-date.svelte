@@ -11,7 +11,8 @@
 <style>
   .date {
     display: grid;
-    max-width: 160px;
+    max-width: 150px;
+    margin-right: 10px;
     grid-template-areas:
       'A B'
       'A C';

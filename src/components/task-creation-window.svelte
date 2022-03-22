@@ -24,6 +24,7 @@
       selectedColor,
       description,
       day: selectedDay,
+      month: selectedMonth,
     });
     handleCloseCreateTask();
     description = '';
