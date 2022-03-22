@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, afterUpdate } from 'svelte';
   import { date, createTaskData } from '../store/store';
 
   const dispatch = createEventDispatcher();
@@ -12,6 +12,12 @@
   let selectedColor = $createTaskData.markers[0];
   let description = $createTaskData.descriptionTask;
   $: totalDays = $date.getTotalDays();
+
+  afterUpdate(() => {
+    selectedYear = $date.year;
+    selectedMonth = $date.month;
+    selectedDay = $date.day;
+  });
 
   const handleAddTask = (e) => {
     e.preventDefault();
