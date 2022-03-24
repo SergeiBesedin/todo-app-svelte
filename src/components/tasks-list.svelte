@@ -38,10 +38,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 400px;
+    height: 400px;
+    overflow: auto;
   }
 
   .message {
+    margin-top: 20px;
     padding: 15px;
     font-style: italic;
   }

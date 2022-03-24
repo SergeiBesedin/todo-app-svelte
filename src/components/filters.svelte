@@ -24,11 +24,14 @@
 
 <style>
   .filters {
+    position: fixed;
+    display: block;
     padding: 5px;
     background: #d1d1d1;
     color: #ffffff;
     font-weight: 600;
     border-radius: 0 0 5px 5px;
+    opacity: 0.7;
   }
 
   .filters span {

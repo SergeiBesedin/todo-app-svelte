@@ -249,6 +249,7 @@
   main {
     background: #ffffff;
     border-radius: 0 0 5px 5px;
+    position: relative;
   }
 
   .buttons {
