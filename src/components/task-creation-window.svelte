@@ -13,6 +13,13 @@
   let description = $createTaskData.descriptionTask;
   $: totalDays = $date.getTotalDays();
 
+  if (selectedMinute < 10) {
+    selectedMinute = `0${selectedMinute}`;
+  }
+  if (selectedHour < 10) {
+    selectedHour = `0${selectedHour}`;
+  }
+
   afterUpdate(() => {
     selectedYear = $date.year;
     selectedMonth = $date.month;
@@ -22,12 +29,12 @@
   const handleAddTask = (e) => {
     e.preventDefault();
     let dateTask = `${selectedDay}.${selectedMonth}.${selectedYear}`;
-    let timeTask = `${selectedHour}:${selectedMinute}`;
     dispatch('addTask', {
       dateTask,
-      timeTask,
       selectedCategory,
       selectedColor,
+      selectedHour,
+      selectedMinute,
       description,
       day: selectedDay,
       month: selectedMonth,

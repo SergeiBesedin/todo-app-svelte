@@ -6,6 +6,7 @@
   import DaysOfTheWeek from './components/days-of-the-week.svelte';
   import TaskCreation from './components/task-creation-window.svelte';
   import Filters from './components/filters.svelte';
+  import Sort from './components/sort.svelte';
   import TasksList from './components/tasks-list.svelte';
   import Buttons from './components/buttons.svelte';
   import ModalConfirm from './components/modal-confirm.svelte';
@@ -34,7 +35,8 @@
           ...items[fullDate],
           {
             id: uuidv4(),
-            time: e.detail.timeTask,
+            hour: e.detail.selectedHour,
+            minute: e.detail.selectedMinute,
             category: e.detail.selectedCategory,
             marker: e.detail.selectedColor,
             description: e.detail.description,
@@ -133,14 +135,6 @@
         }),
       };
     });
-    tasks.update((items) => {
-      return {
-        ...items,
-        [fullDate]: items[fullDate].sort((a, b) => {
-          return b.rating - a.rating;
-        }),
-      };
-    });
   };
 
   const handleOpenCreateTask = () => {
@@ -156,6 +150,37 @@
       document.querySelector('.calendar-window').style.display = 'block';
     } else {
       document.querySelector('.calendar-window').style.display = 'none';
+    }
+  };
+
+  const sortTasksByOption = (e) => {
+    if (e.detail.option === 'category') {
+      tasks.update((items) => {
+        return {
+          ...items,
+          [fullDate]: items[fullDate].sort((a, b) => {
+            return b.category.length - a.category.length;
+          }),
+        };
+      });
+    } else if (e.detail.option === 'time') {
+      tasks.update((items) => {
+        return {
+          ...items,
+          [fullDate]: items[fullDate].sort((a, b) => {
+            return `${a.hour}${a.minute}` - `${b.hour}${b.minute}`;
+          }),
+        };
+      });
+    } else {
+      tasks.update((items) => {
+        return {
+          ...items,
+          [fullDate]: items[fullDate].sort((a, b) => {
+            return b[e.detail.option] - a[e.detail.option];
+          }),
+        };
+      });
     }
   };
 
@@ -177,7 +202,10 @@
       </header>
 
       <main>
-        <Filters {currentFilter} on:changeFilter={handleChangeFilter} />
+        <div class="sidebar">
+          <Sort {filteredTasks} on:sort={sortTasksByOption} />
+          <Filters {currentFilter} on:changeFilter={handleChangeFilter} />
+        </div>
         <TasksList
           {filteredTasks}
           {currentFilter}
@@ -234,5 +262,12 @@
     background: #ffffff;
     border-radius: 0 0 5px 5px;
     position: relative;
+  }
+
+  .sidebar {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: 30px;
   }
 </style>

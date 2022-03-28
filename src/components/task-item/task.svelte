@@ -5,9 +5,19 @@
   export let id;
   export let description;
   export let rating;
-  export let time;
+  export let hour;
+  export let minute;
   export let category;
   export let marker;
+
+  let minuteModify = minute;
+  let hourModify = hour;
+  if (minute < 10) {
+    minuteModify = `0${minute}`;
+  }
+  if (hour < 10) {
+    hourModify = `0${hour}`;
+  }
 
   const dispatch = createEventDispatcher();
   const numTotalStars = 3;
@@ -37,7 +47,7 @@
 
     <div class="task-right">
       <div class="task-right-container">
-        <p>{time}</p>
+        <p>{`${hourModify}:${minuteModify}`}</p>
         <div class="task-raiting">
           <div class="raiting-items">
             {#each Array.from({ length: numTotalStars }) as star, i (id + i)}

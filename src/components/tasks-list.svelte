@@ -4,9 +4,9 @@
   export let currentFilter;
 
   const textMessage = {
-    All: 'На этот день Вы еще ничего не планировали',
-    Active: 'Нет активных задач',
-    Completed: 'Вы еще не выполнини ни одной задачи',
+    All: "You haven't planned anything for this day yet",
+    Active: 'No active tasks',
+    Completed: "You haven't completed any tasks yet",
   };
 </script>
 
@@ -14,12 +14,13 @@
   {#if filteredTasks.length === 0}
     <p class="message">{textMessage[currentFilter]}</p>
   {:else}
-    {#each filteredTasks as { done, description, time, category, marker, id, rating } (id)}
+    {#each filteredTasks as { done, description, hour, minute, category, marker, id, rating } (id)}
       <TaskItem
         {done}
         {description}
         {id}
-        {time}
+        {hour}
+        {minute}
         {category}
         {marker}
         {rating}

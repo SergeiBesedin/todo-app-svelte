@@ -1,8 +1,8 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  const dispatch = createEventDispatcher();
   export let currentFilter;
 
+  const dispatch = createEventDispatcher();
   const filters = [
     { filter: 'All' },
     { filter: 'Active' },
@@ -16,24 +16,14 @@
   };
 </script>
 
-<div class="container">
-  <div class="filters" on:click={changeFilter}>
-    {#each filters as { filter }}
-      <span class:active={filter === currentFilter}>{filter}</span>
-    {/each}
-  </div>
+<div class="filters" on:click={changeFilter}>
+  {#each filters as { filter }}
+    <span class:active={filter === currentFilter}>{filter}</span>
+  {/each}
 </div>
 
 <style>
-  .container {
-    display: flex;
-    justify-content: center;
-    height: 30px;
-  }
-
   .filters {
-    position: fixed;
-    display: block;
     padding: 5px;
     background: #d1d1d1;
     color: #ffffff;
