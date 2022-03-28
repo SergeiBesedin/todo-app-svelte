@@ -1,56 +1,25 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
   import { date, createTaskData } from '../store/store';
 
-  const dispatch = createEventDispatcher();
-  let selectedYear = $date.year;
-  let selectedMonth = $date.month;
-  let selectedDay = $date.day;
-  let selectedHour = $date.hour;
-  let selectedMinute = $date.minutes;
-  let selectedCategory = $createTaskData.category[0];
-  let selectedColor = $createTaskData.markers[0];
-  let description = $createTaskData.descriptionTask;
   $: totalDays = $date.getTotalDays();
 
-  if (selectedMinute < 10) {
-    selectedMinute = `0${selectedMinute}`;
+  if ($date.minutes < 10) {
+    $date.minutes = `0${$date.minutes}`;
   }
-  if (selectedHour < 10) {
-    selectedHour = `0${selectedHour}`;
+  if ($date.hour < 10) {
+    $date.hour = `0${$date.hour}`;
   }
-
-  const handleAddTask = (e) => {
-    e.preventDefault();
-    let dateTask = `${selectedDay}.${selectedMonth}.${selectedYear}`;
-    dispatch('addTask', {
-      dateTask,
-      selectedCategory,
-      selectedColor,
-      selectedHour,
-      selectedMinute,
-      description,
-      day: selectedDay,
-      month: selectedMonth,
-    });
-    handleCloseCreateTask();
-    description = '';
-  };
-
-  const handleCloseCreateTask = () => {
-    document.querySelector('.task-creation-modal').style.display = 'none';
-  };
 </script>
 
 <div class="task-creation-modal">
-  <div class="task-creation-close" on:click={handleCloseCreateTask} />
-  <form on:submit={handleAddTask}>
+  <div class="task-creation-close" on:click />
+  <form on:submit>
     <div class="task-creation">
       <h2>Create task</h2>
       <div class="task-date">
         <span>Date:</span>
 
-        <select name="select" bind:value={selectedDay}>
+        <select name="select" bind:value={$date.day}>
           {#each Array.from({ length: totalDays }) as day, i}
             <option value={i + 1}>{i + 1}</option>
           {/each}
@@ -58,7 +27,7 @@
         -
         <select
           name="select"
-          bind:value={selectedMonth}
+          bind:value={$date.month}
           on:change={(e) =>
             (totalDays = $date.getTotalDays(Number(e.target.value)))}
         >
@@ -67,20 +36,20 @@
           {/each}
         </select>
         -
-        <select name="select" bind:value={selectedYear}>
-          <option value={selectedYear} selected>{$date.year}</option>
+        <select name="select" bind:value={$date.year}>
+          <option value={$date.year} selected>{$date.year}</option>
         </select>
       </div>
 
       <div class="task-time">
         <span>Time:</span>
-        <select name="select" bind:value={selectedHour}>
+        <select name="select" bind:value={$date.hour}>
           {#each Array.from({ length: 24 }) as hour, i}
             <option value={i + 1}>{i + 1}</option>
           {/each}
         </select>
         :
-        <select name="select" bind:value={selectedMinute}>
+        <select name="select" bind:value={$date.minutes}>
           {#each Array.from({ length: 61 }) as minutes, i}
             <option value={i}>{i}</option>
           {/each}
@@ -89,25 +58,25 @@
 
       <div class="task-category">
         <span>Category:</span>
-        <select name="select" bind:value={selectedCategory}>
-          {#each $createTaskData.category as category}
-            <option value={category}>{category}</option>
+        <select name="select" bind:value={$createTaskData.categoryInd}>
+          {#each $createTaskData.category as category, i}
+            <option value={i}>{category}</option>
           {/each}
         </select>
       </div>
 
       <div class="task-marker">
         <span>Marker</span>
-        <select name="select" bind:value={selectedColor}>
-          {#each $createTaskData.markers as marker}
-            <option value={marker} style={`color: ${marker}`}>{marker}</option>
+        <select name="select" bind:value={$createTaskData.markersInd}>
+          {#each $createTaskData.markers as marker, i}
+            <option value={i} style={`color: ${marker}`}>{marker}</option>
           {/each}
         </select>
       </div>
 
       <div class="task-description">
         <textarea
-          bind:value={description}
+          bind:value={$createTaskData.descriptionTask}
           maxlength="30"
           minlength="5"
           required

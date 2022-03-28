@@ -14,15 +14,15 @@
   {#if filteredTasks.length === 0}
     <p class="message">{textMessage[currentFilter]}</p>
   {:else}
-    {#each filteredTasks as { done, description, hour, minute, category, marker, id, rating } (id)}
+    {#each filteredTasks as { done, description, hour, minute, markersInd, categoryInd, id, rating } (id)}
       <TaskItem
         {done}
         {description}
         {id}
         {hour}
         {minute}
-        {category}
-        {marker}
+        {markersInd}
+        {categoryInd}
         {rating}
         on:remove
         on:changeDone

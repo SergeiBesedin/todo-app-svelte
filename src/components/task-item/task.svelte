@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { createTaskData } from '../../store/store';
   import Star from './star.svelte';
   import triangularArrow from '../../assets/icons/triangular-arrow.png';
   export let done;
@@ -8,8 +9,8 @@
   export let rating;
   export let hour;
   export let minute;
-  export let category;
-  export let marker;
+  export let categoryInd;
+  export let markersInd;
 
   let minuteModify = minute;
   let hourModify = hour;
@@ -43,10 +44,13 @@
 <div class="task">
   <div class="task-container">
     <div class="task-left">
-      <div class="task-marker" style={`background: ${marker}`} />
+      <div
+        class="task-marker"
+        style={`background: ${$createTaskData.markers[markersInd]}`}
+      />
       <div>
         <p>{description}</p>
-        <span>{category}</span>
+        <span>{$createTaskData.category[categoryInd]}</span>
       </div>
     </div>
 

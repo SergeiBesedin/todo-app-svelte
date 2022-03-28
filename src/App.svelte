@@ -13,7 +13,6 @@
 
   let currentFilter = 'All';
   let calendarOpen = false;
-  let fullDate = `${$date.day}.${$date.month}.${$date.year}`;
 
   const updateTasks = (date) => {
     if ($tasks.hasOwnProperty(date)) {
@@ -23,23 +22,27 @@
       return { ...items, [date]: [] };
     });
   };
-  updateTasks(fullDate);
+  updateTasks($date.getFullDate());
+
+  const handleCloseCreateTask = () => {
+    document.querySelector('.task-creation-modal').style.display = 'none';
+  };
 
   const handleAddTask = (e) => {
-    fullDate = e.detail.dateTask;
-    updateTasks(fullDate);
+    e.preventDefault();
+    updateTasks($date.getFullDate());
     tasks.update((items) => {
       return {
         ...items,
-        [fullDate]: [
-          ...items[fullDate],
+        [$date.getFullDate()]: [
+          ...items[$date.getFullDate()],
           {
             id: uuidv4(),
-            hour: e.detail.selectedHour,
-            minute: e.detail.selectedMinute,
-            category: e.detail.selectedCategory,
-            marker: e.detail.selectedColor,
-            description: e.detail.description,
+            hour: $date.hour,
+            minute: $date.minutes,
+            markersInd: $createTaskData.markersInd,
+            categoryInd: $createTaskData.categoryInd,
+            description: $createTaskData.descriptionTask,
             done: false,
             rating: 0,
           },
@@ -49,13 +52,14 @@
     createTaskData.update((items) => {
       return { ...items, descriptionTask: '' };
     });
+    handleCloseCreateTask();
   };
 
   const handleRemove = (e) => {
     tasks.update((items) => {
       return {
         ...items,
-        [fullDate]: items[fullDate].filter((item) => {
+        [$date.getFullDate()]: items[$date.getFullDate()].filter((item) => {
           return item.id !== e.detail.id;
         }),
       };
@@ -67,7 +71,7 @@
       tasks.update((items) => {
         return {
           ...items,
-          [fullDate]: [],
+          [$date.getFullDate()]: [],
         };
       });
     }
@@ -87,8 +91,7 @@
         dayOfTheWeek: new Date($date.year, $date.month, e.detail.day).getDay(),
       };
     });
-    fullDate = `${$date.day}.${$date.month}.${$date.year}`;
-    updateTasks(fullDate);
+    updateTasks($date.getFullDate());
   };
 
   const handleChangeFilter = (e) => {
@@ -111,7 +114,7 @@
     tasks.update((items) => {
       return {
         ...items,
-        [fullDate]: items[fullDate].map((item) => {
+        [$date.getFullDate()]: items[$date.getFullDate()].map((item) => {
           if (item.id === e.detail.id) {
             return { ...item, done: e.detail.checked };
           } else {
@@ -126,7 +129,7 @@
     tasks.update((items) => {
       return {
         ...items,
-        [fullDate]: items[fullDate].map((item) => {
+        [$date.getFullDate()]: items[$date.getFullDate()].map((item) => {
           if (item.id === e.detail.id) {
             return { ...item, rating: e.detail.rating };
           } else {
@@ -158,7 +161,7 @@
       tasks.update((items) => {
         return {
           ...items,
-          [fullDate]: items[fullDate].sort((a, b) => {
+          [$date.getFullDate()]: items[$date.getFullDate()].sort((a, b) => {
             return b.category.length - a.category.length;
           }),
         };
@@ -167,7 +170,7 @@
       tasks.update((items) => {
         return {
           ...items,
-          [fullDate]: items[fullDate].sort((a, b) => {
+          [$date.getFullDate()]: items[$date.getFullDate()].sort((a, b) => {
             return `${a.hour}${a.minute}` - `${b.hour}${b.minute}`;
           }),
         };
@@ -176,7 +179,7 @@
       tasks.update((items) => {
         return {
           ...items,
-          [fullDate]: items[fullDate].sort((a, b) => {
+          [$date.getFullDate()]: items[$date.getFullDate()].sort((a, b) => {
             return b[e.detail.option] - a[e.detail.option];
           }),
         };
@@ -204,7 +207,7 @@
   // const handleOpenBasket = () => {};
   // const handleCloseBasket = () => {};
 
-  $: filteredTasks = filterTasks($tasks[fullDate], currentFilter);
+  $: filteredTasks = filterTasks($tasks[$date.getFullDate()], currentFilter);
 </script>
 
 <div class="wrapper">
@@ -232,10 +235,14 @@
           on:changeRating={handleChangeRating}
           on:editTask={handleEditTaskClick}
         />
-        <Buttons {fullDate} on:click={handleOpenCreateTask} />
+        <Buttons on:click={handleOpenCreateTask} />
       </main>
     </div>
-    <TaskCreation on:addTask={handleChangeDate} on:addTask={handleAddTask} />
+    <TaskCreation
+      on:addTask={handleChangeDate}
+      on:submit={handleAddTask}
+      on:click={handleCloseCreateTask}
+    />
   </div>
   <ModalConfirm on:confirm={handleConfirmDel} />
 </div>

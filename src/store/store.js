@@ -4,7 +4,9 @@ export const tasks = writable({});
 
 export const createTaskData = writable({
   category: ['Shopping', 'Hobby', 'Sport', 'Education', 'Job', 'Housework'],
+  categoryInd: 0,
   markers: ['blue', 'green', 'red', 'purple', 'yellow', 'orange'],
+  markersInd: 0,
   descriptionTask: '',
 });
 
@@ -40,5 +42,8 @@ export const date = writable({
   },
   getTotalDays(month = this.month, year = this.year) {
     return new Date(year, month + 1, 0).getDate();
+  },
+  getFullDate() {
+    return `${this.day}.${this.month}.${this.year}`;
   },
 });
