@@ -1,5 +1,4 @@
 <script>
-  import Filters from './filters.svelte';
   import TaskItem from './task-item/task.svelte';
   export let filteredTasks;
   export let currentFilter;
@@ -12,7 +11,6 @@
 </script>
 
 <div class="tasks-list">
-  <Filters on:changeFilter {currentFilter} />
   {#if filteredTasks.length === 0}
     <p class="message">{textMessage[currentFilter]}</p>
   {:else}
@@ -43,7 +41,6 @@
   }
 
   .message {
-    margin-top: 20px;
     padding: 15px;
     font-style: italic;
   }

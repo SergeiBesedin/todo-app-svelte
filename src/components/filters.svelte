@@ -16,13 +16,21 @@
   };
 </script>
 
-<div class="filters" on:click={changeFilter}>
-  {#each filters as { filter }}
-    <span class:active={filter === currentFilter}>{filter}</span>
-  {/each}
+<div class="container">
+  <div class="filters" on:click={changeFilter}>
+    {#each filters as { filter }}
+      <span class:active={filter === currentFilter}>{filter}</span>
+    {/each}
+  </div>
 </div>
 
 <style>
+  .container {
+    display: flex;
+    justify-content: center;
+    height: 30px;
+  }
+
   .filters {
     position: fixed;
     display: block;

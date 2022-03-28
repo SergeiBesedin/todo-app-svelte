@@ -140,7 +140,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 570px;
+    height: 600px;
     border-radius: 5px;
     color: #ffffff;
     font-size: 20px;

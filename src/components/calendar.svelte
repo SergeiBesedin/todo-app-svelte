@@ -36,6 +36,9 @@
   }
 
   .calendar-window {
+    position: absolute;
+    top: 5px;
+    right: 50px;
     display: none;
     color: #ffffff;
     background: #ffffff;
