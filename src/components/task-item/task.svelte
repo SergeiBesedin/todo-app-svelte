@@ -175,7 +175,7 @@
     background-color: #157ef7;
     background-repeat: no-repeat;
     background-size: 45% 45%;
-    background-position: center;
+    background-position: 70% 40%;
     border-radius: 0 0 0 100%;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
     opacity: 0.3;
