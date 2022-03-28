@@ -27,6 +27,7 @@
         on:remove
         on:changeDone
         on:changeRating
+        on:editTask
       />
     {/each}
   {/if}

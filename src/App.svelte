@@ -184,6 +184,23 @@
     }
   };
 
+  const handleEditTaskClick = (e) => {
+    createTaskData.update((data) => {
+      return {
+        ...data,
+        descriptionTask: e.detail.description,
+      };
+    });
+    date.update((value) => {
+      return {
+        ...value,
+        hour: e.detail.hour,
+        minutes: e.detail.minutes,
+      };
+    });
+    handleOpenCreateTask();
+  };
+
   // const handleOpenBasket = () => {};
   // const handleCloseBasket = () => {};
 
@@ -201,17 +218,19 @@
         <DaysOfTheWeek on:changeDate={handleChangeDate} />
       </header>
 
+      <div class="sidebar">
+        <Sort {filteredTasks} on:sort={sortTasksByOption} />
+        <Filters {currentFilter} on:changeFilter={handleChangeFilter} />
+      </div>
+
       <main>
-        <div class="sidebar">
-          <Sort {filteredTasks} on:sort={sortTasksByOption} />
-          <Filters {currentFilter} on:changeFilter={handleChangeFilter} />
-        </div>
         <TasksList
           {filteredTasks}
           {currentFilter}
           on:remove={handleRemove}
           on:changeDone={changeDoneHandler}
           on:changeRating={handleChangeRating}
+          on:editTask={handleEditTaskClick}
         />
         <Buttons {fullDate} on:click={handleOpenCreateTask} />
       </main>
@@ -265,9 +284,9 @@
   }
 
   .sidebar {
+    background: #ffffff;
     position: relative;
     display: flex;
     justify-content: center;
-    height: 30px;
   }
 </style>

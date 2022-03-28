@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import Star from './star.svelte';
+  import triangularArrow from '../../assets/icons/triangular-arrow.png';
   export let done;
   export let id;
   export let description;
@@ -32,6 +33,10 @@
 
   const handleRemove = (id) => {
     dispatch('remove', { id });
+  };
+
+  const handleEditTaskClick = (hour, minutes, description) => {
+    dispatch('editTask', { hour, minutes, description });
   };
 </script>
 
@@ -72,7 +77,19 @@
           />
           <label for={`checkbox-${id}`} />
         </div>
-        <div class="task-remove" on:click={() => handleRemove(id)} />
+        <div class="task-dropdown">
+          <button class="task-actions-btn">
+            <img src={triangularArrow} alt="arrow" />
+          </button>
+          <div class="task-dropdown-content">
+            <span
+              on:click={() =>
+                handleEditTaskClick(hourModify, minuteModify, description)}
+              >Edit</span
+            >
+            <span on:click={() => handleRemove(id)}>Delete</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -185,42 +202,57 @@
     opacity: 1;
   }
 
-  .task-remove {
-    position: absolute;
-    bottom: 0;
-    right: -7px;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    transition: opacity ease 0.5s;
+  .task-actions-btn {
+    padding: 5px;
+    border: none;
+    outline: none;
+    background: none;
   }
 
-  .task-remove:hover {
-    opacity: 0.5;
+  .task-actions-btn img {
+    width: 22px;
   }
 
-  .task-remove::before,
-  .task-remove::after {
-    content: '';
+  .task-dropdown {
     position: absolute;
-    top: 13px;
+    bottom: -10px;
+    right: -5px;
+  }
+
+  .task-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 0;
+    background-color: #f1f1f1;
+    max-width: 60px;
+    z-index: 1;
+    border-radius: 5px;
+  }
+
+  .task-dropdown-content span {
     display: block;
-    width: 15px;
-    height: 3px;
-    background: #e92d2d;
+    padding: 5px;
+    font-size: 12px;
+    cursor: pointer;
   }
 
-  .task-remove::before {
-    transform: rotate(45deg);
+  .task-dropdown-content span:last-child {
+    color: rgb(223, 33, 33);
   }
 
-  .task-remove::after {
-    transform: rotate(-45deg);
+  .task-dropdown-content span:hover {
+    background-color: #d1d1d1;
+    border-radius: 5px;
   }
 
-  .raiting-label:hover,
+  .task-dropdown:hover .task-dropdown-content {
+    display: block;
+  }
+
+  /* .raiting-label:hover,
   .raiting-label:hover ~ .raiting-label,
   .raiting-label:checked ~ .raiting-label:hover {
     color: rgb(243, 205, 135);
-  }
+  } */
 </style>

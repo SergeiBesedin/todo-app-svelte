@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher, afterUpdate } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { date, createTaskData } from '../store/store';
 
   const dispatch = createEventDispatcher();
@@ -8,7 +8,7 @@
   let selectedDay = $date.day;
   let selectedHour = $date.hour;
   let selectedMinute = $date.minutes;
-  let selectedCategory = $date.category;
+  let selectedCategory = $createTaskData.category[0];
   let selectedColor = $createTaskData.markers[0];
   let description = $createTaskData.descriptionTask;
   $: totalDays = $date.getTotalDays();
@@ -19,12 +19,6 @@
   if (selectedHour < 10) {
     selectedHour = `0${selectedHour}`;
   }
-
-  afterUpdate(() => {
-    selectedYear = $date.year;
-    selectedMonth = $date.month;
-    selectedDay = $date.day;
-  });
 
   const handleAddTask = (e) => {
     e.preventDefault();
