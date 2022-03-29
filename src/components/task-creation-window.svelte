@@ -19,7 +19,7 @@
       <div class="task-date">
         <span>Date:</span>
 
-        <select name="select" bind:value={$date.day}>
+        <select name="select" bind:value={$date.day} on:change>
           {#each Array.from({ length: totalDays }) as day, i}
             <option value={i + 1}>{i + 1}</option>
           {/each}
@@ -28,6 +28,7 @@
         <select
           name="select"
           bind:value={$date.month}
+          on:change
           on:change={(e) =>
             (totalDays = $date.getTotalDays(Number(e.target.value)))}
         >

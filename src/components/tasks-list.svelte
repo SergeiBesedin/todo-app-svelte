@@ -27,7 +27,7 @@
         on:remove
         on:changeDone
         on:changeRating
-        on:editTask
+        on:editTaskClick
       />
     {/each}
   {/if}

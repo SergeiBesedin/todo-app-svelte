@@ -12,15 +12,6 @@
   export let categoryInd;
   export let markersInd;
 
-  let minuteModify = minute;
-  let hourModify = hour;
-  if (minute < 10) {
-    minuteModify = `0${minute}`;
-  }
-  if (hour < 10) {
-    hourModify = `0${hour}`;
-  }
-
   const dispatch = createEventDispatcher();
   const numTotalStars = 3;
 
@@ -36,8 +27,8 @@
     dispatch('remove', { id });
   };
 
-  const handleEditTaskClick = (hour, minutes, description) => {
-    dispatch('editTask', { hour, minutes, description });
+  const handleEditTaskClick = (hour, minute, description, id) => {
+    dispatch('editTaskClick', { hour, minute, description, id });
   };
 </script>
 
@@ -56,7 +47,7 @@
 
     <div class="task-right">
       <div class="task-right-container">
-        <p>{`${hourModify}:${minuteModify}`}</p>
+        <p>{`${hour}:${minute}`}</p>
         <div class="task-raiting">
           <div class="raiting-items">
             {#each Array.from({ length: numTotalStars }) as star, i (id + i)}
@@ -88,8 +79,7 @@
           <div class="task-dropdown-content">
             <span
               on:click={() =>
-                handleEditTaskClick(hourModify, minuteModify, description)}
-              >Edit</span
+                handleEditTaskClick(hour, minute, description, id)}>Edit</span
             >
             <span on:click={() => handleRemove(id)}>Delete</span>
           </div>

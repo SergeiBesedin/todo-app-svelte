@@ -13,6 +13,8 @@
 
   let currentFilter = 'All';
   let calendarOpen = false;
+  let editTaskId = null;
+  let editTask = false;
 
   const updateTasks = (date) => {
     if ($tasks.hasOwnProperty(date)) {
@@ -31,24 +33,29 @@
   const handleAddTask = (e) => {
     e.preventDefault();
     updateTasks($date.getFullDate());
-    tasks.update((items) => {
-      return {
-        ...items,
-        [$date.getFullDate()]: [
-          ...items[$date.getFullDate()],
-          {
-            id: uuidv4(),
-            hour: $date.hour,
-            minute: $date.minutes,
-            markersInd: $createTaskData.markersInd,
-            categoryInd: $createTaskData.categoryInd,
-            description: $createTaskData.descriptionTask,
-            done: false,
-            rating: 0,
-          },
-        ],
-      };
-    });
+    if (editTask === true) {
+      handleEditTask();
+      editTask = false;
+    } else {
+      tasks.update((items) => {
+        return {
+          ...items,
+          [$date.getFullDate()]: [
+            ...items[$date.getFullDate()],
+            {
+              id: uuidv4(),
+              hour: $date.hour,
+              minute: $date.minutes,
+              markersInd: $createTaskData.markersInd,
+              categoryInd: $createTaskData.categoryInd,
+              description: $createTaskData.descriptionTask,
+              done: false,
+              rating: 0,
+            },
+          ],
+        };
+      });
+    }
     createTaskData.update((items) => {
       return { ...items, descriptionTask: '' };
     });
@@ -188,6 +195,8 @@
   };
 
   const handleEditTaskClick = (e) => {
+    editTaskId = e.detail.id;
+    editTask = true;
     createTaskData.update((data) => {
       return {
         ...data,
@@ -203,6 +212,30 @@
     });
     handleOpenCreateTask();
   };
+
+  const handleEditTask = () => {
+    tasks.update((items) => {
+      return {
+        ...items,
+        [$date.getFullDate()]: items[$date.getFullDate()].map((item) => {
+          if (item.id === editTaskId) {
+            return {
+              ...item,
+              hour: $date.hour,
+              minute: $date.minutes,
+              markersInd: $createTaskData.markersInd,
+              categoryInd: $createTaskData.categoryInd,
+              description: $createTaskData.descriptionTask,
+            };
+          } else {
+            return item;
+          }
+        }),
+      };
+    });
+  };
+
+  $: console.log($date.hour);
 
   // const handleOpenBasket = () => {};
   // const handleCloseBasket = () => {};
@@ -233,15 +266,15 @@
           on:remove={handleRemove}
           on:changeDone={changeDoneHandler}
           on:changeRating={handleChangeRating}
-          on:editTask={handleEditTaskClick}
+          on:editTaskClick={handleEditTaskClick}
         />
         <Buttons on:click={handleOpenCreateTask} />
       </main>
     </div>
     <TaskCreation
-      on:addTask={handleChangeDate}
       on:submit={handleAddTask}
       on:click={handleCloseCreateTask}
+      on:change={() => updateTasks($date.getFullDate())}
     />
   </div>
   <ModalConfirm on:confirm={handleConfirmDel} />
