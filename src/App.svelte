@@ -235,8 +235,6 @@
     });
   };
 
-  $: console.log($date.hour);
-
   // const handleOpenBasket = () => {};
   // const handleCloseBasket = () => {};
 

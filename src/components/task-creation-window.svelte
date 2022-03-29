@@ -1,14 +1,19 @@
 <script>
   import { date, createTaskData } from '../store/store';
 
-  $: totalDays = $date.getTotalDays();
+  const makeTwoDigits = (num) => {
+    return num.toString().padStart(2, 0);
+  };
 
-  if ($date.minutes < 10) {
-    $date.minutes = `0${$date.minutes}`;
-  }
-  if ($date.hour < 10) {
-    $date.hour = `0${$date.hour}`;
-  }
+  $: totalDays = $date.getTotalDays();
+  let hour = makeTwoDigits($date.hour);
+  let minutes = makeTwoDigits($date.minutes);
+
+  const changeTimeHandler = () => {
+    date.update((value) => {
+      return { ...value, hour, minutes };
+    });
+  };
 </script>
 
 <div class="task-creation-modal">
@@ -16,10 +21,10 @@
   <form on:submit>
     <div class="task-creation">
       <h2>Create task</h2>
-      <div class="task-date">
+      <div class="task-date" on:change>
         <span>Date:</span>
 
-        <select name="select" bind:value={$date.day} on:change>
+        <select name="select" bind:value={$date.day}>
           {#each Array.from({ length: totalDays }) as day, i}
             <option value={i + 1}>{i + 1}</option>
           {/each}
@@ -28,7 +33,6 @@
         <select
           name="select"
           bind:value={$date.month}
-          on:change
           on:change={(e) =>
             (totalDays = $date.getTotalDays(Number(e.target.value)))}
         >
@@ -42,17 +46,17 @@
         </select>
       </div>
 
-      <div class="task-time">
+      <div class="task-time" on:change={changeTimeHandler}>
         <span>Time:</span>
-        <select name="select" bind:value={$date.hour}>
+        <select name="select" bind:value={hour}>
           {#each Array.from({ length: 24 }) as hour, i}
-            <option value={i + 1}>{i + 1}</option>
+            <option value={makeTwoDigits(i + 1)}>{makeTwoDigits(i + 1)}</option>
           {/each}
         </select>
         :
-        <select name="select" bind:value={$date.minutes}>
-          {#each Array.from({ length: 61 }) as minutes, i}
-            <option value={i}>{i}</option>
+        <select name="select" bind:value={minutes}>
+          {#each Array.from({ length: 60 }) as minutes, i}
+            <option value={makeTwoDigits(i)}>{makeTwoDigits(i)}</option>
           {/each}
         </select>
       </div>
