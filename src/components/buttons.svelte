@@ -7,7 +7,7 @@
       return;
     }
     document.querySelector('.modal-dialog').style.display = 'block';
-    document.querySelector('.container').style.zIndex = '-1';
+    document.querySelector('.app').style.zIndex = '-1';
   };
 </script>
 

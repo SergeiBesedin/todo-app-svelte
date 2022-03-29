@@ -22,14 +22,14 @@
   .modal-dialog {
     z-index: 101;
     position: absolute;
+    top: 0;
+    left: 50px;
+    right: 50px;
     top: 50%;
-    left: 50%;
     transform: translateY(-50%);
-    transform: translateX(-50%);
     display: none;
     border-radius: 10px;
     padding: 8px;
-    max-width: 400px;
     text-align: center;
     background: #f6a9ff;
     box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);

@@ -103,6 +103,7 @@
 
 <style>
   .task-creation-modal {
+    user-select: none;
     display: none;
     z-index: 101;
     box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);

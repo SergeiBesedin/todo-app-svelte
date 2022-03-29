@@ -87,7 +87,7 @@
       });
     }
     document.querySelector('.modal-dialog').style.display = 'none';
-    document.querySelector('.container').style.zIndex = '0';
+    document.querySelector('.app').style.zIndex = '0';
   };
 
   const handleChangeDate = (e) => {
@@ -272,8 +272,8 @@
       on:click={handleCloseCreateTask}
       on:change={() => updateTasks($date.getFullDate())}
     />
+    <ModalConfirm on:confirm={handleConfirmDel} />
   </div>
-  <ModalConfirm on:confirm={handleConfirmDel} />
 </div>
 
 <style>
@@ -293,7 +293,6 @@
   }
 
   .app {
-    z-index: 0;
     position: relative;
     box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
   }
