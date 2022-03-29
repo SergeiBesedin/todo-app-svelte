@@ -13,7 +13,6 @@
     <option selected="true" disabled="disabled">Sorting</option>
     <option value="rating">priority</option>
     <option value="time">time</option>
-    <option value="category">category</option>
     <option value="done">performed</option>
   </select>
 </div>

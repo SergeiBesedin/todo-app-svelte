@@ -1,11 +1,12 @@
 <script>
   import { date, createTaskData } from '../store/store';
+  export let editTask;
 
   const makeTwoDigits = (num) => {
     return num.toString().padStart(2, 0);
   };
 
-  $: totalDays = $date.getTotalDays();
+  let totalDays = $date.getTotalDays();
   let hour = makeTwoDigits($date.hour);
   let minutes = makeTwoDigits($date.minutes);
 
@@ -24,7 +25,7 @@
       <div class="task-date" on:change>
         <span>Date:</span>
 
-        <select name="select" bind:value={$date.day}>
+        <select name="select" bind:value={$date.day} disabled={editTask}>
           {#each Array.from({ length: totalDays }) as day, i}
             <option value={i + 1}>{i + 1}</option>
           {/each}
@@ -33,6 +34,7 @@
         <select
           name="select"
           bind:value={$date.month}
+          disabled={editTask}
           on:change={(e) =>
             (totalDays = $date.getTotalDays(Number(e.target.value)))}
         >
@@ -41,7 +43,7 @@
           {/each}
         </select>
         -
-        <select name="select" bind:value={$date.year}>
+        <select name="select" bind:value={$date.year} disabled={editTask}>
           <option value={$date.year} selected>{$date.year}</option>
         </select>
       </div>
@@ -187,7 +189,9 @@
     width: 100%;
     height: 170px;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 600;
   }
 
   .task-action {

@@ -27,8 +27,22 @@
     dispatch('remove', { id });
   };
 
-  const handleEditTaskClick = (hour, minute, description, id) => {
-    dispatch('editTaskClick', { hour, minute, description, id });
+  const handleEditTaskClick = (
+    hour,
+    minute,
+    description,
+    id,
+    categoryInd,
+    markersInd
+  ) => {
+    dispatch('editTaskClick', {
+      hour,
+      minute,
+      description,
+      id,
+      categoryInd,
+      markersInd,
+    });
   };
 </script>
 
@@ -79,7 +93,14 @@
           <div class="task-dropdown-content">
             <span
               on:click={() =>
-                handleEditTaskClick(hour, minute, description, id)}>Edit</span
+                handleEditTaskClick(
+                  hour,
+                  minute,
+                  description,
+                  id,
+                  categoryInd,
+                  markersInd
+                )}>Edit</span
             >
             <span on:click={() => handleRemove(id)}>Delete</span>
           </div>
@@ -243,10 +264,4 @@
   .task-dropdown:hover .task-dropdown-content {
     display: block;
   }
-
-  /* .raiting-label:hover,
-  .raiting-label:hover ~ .raiting-label,
-  .raiting-label:checked ~ .raiting-label:hover {
-    color: rgb(243, 205, 135);
-  } */
 </style>

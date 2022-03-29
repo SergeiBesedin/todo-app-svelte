@@ -27,15 +27,22 @@
   updateTasks($date.getFullDate());
 
   const handleCloseCreateTask = () => {
+    editTask = false;
+    createTaskData.update((items) => {
+      return {
+        ...items,
+        descriptionTask: '',
+        categoryInd: 0,
+        markersInd: 0,
+      };
+    });
     document.querySelector('.task-creation-modal').style.display = 'none';
   };
 
   const handleAddTask = (e) => {
     e.preventDefault();
-    updateTasks($date.getFullDate());
     if (editTask === true) {
       handleEditTask();
-      editTask = false;
     } else {
       tasks.update((items) => {
         return {
@@ -56,9 +63,6 @@
         };
       });
     }
-    createTaskData.update((items) => {
-      return { ...items, descriptionTask: '' };
-    });
     handleCloseCreateTask();
   };
 
@@ -164,16 +168,7 @@
   };
 
   const sortTasksByOption = (e) => {
-    if (e.detail.option === 'category') {
-      tasks.update((items) => {
-        return {
-          ...items,
-          [$date.getFullDate()]: items[$date.getFullDate()].sort((a, b) => {
-            return b.category.length - a.category.length;
-          }),
-        };
-      });
-    } else if (e.detail.option === 'time') {
+    if (e.detail.option === 'time') {
       tasks.update((items) => {
         return {
           ...items,
@@ -201,13 +196,15 @@
       return {
         ...data,
         descriptionTask: e.detail.description,
+        categoryInd: e.detail.categoryInd,
+        markersInd: e.detail.markersInd,
       };
     });
     date.update((value) => {
       return {
         ...value,
         hour: e.detail.hour,
-        minutes: e.detail.minutes,
+        minutes: e.detail.minute,
       };
     });
     handleOpenCreateTask();
@@ -270,6 +267,7 @@
       </main>
     </div>
     <TaskCreation
+      {editTask}
       on:submit={handleAddTask}
       on:click={handleCloseCreateTask}
       on:change={() => updateTasks($date.getFullDate())}

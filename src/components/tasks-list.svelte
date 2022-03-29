@@ -11,26 +11,24 @@
 </script>
 
 <div class="tasks-list">
-  {#if filteredTasks.length === 0}
-    <p class="message">{textMessage[currentFilter]}</p>
+  {#each filteredTasks as { done, description, hour, minute, markersInd, categoryInd, id, rating } (id)}
+    <TaskItem
+      {done}
+      {description}
+      {id}
+      {hour}
+      {minute}
+      {markersInd}
+      {categoryInd}
+      {rating}
+      on:remove
+      on:changeDone
+      on:changeRating
+      on:editTaskClick
+    />
   {:else}
-    {#each filteredTasks as { done, description, hour, minute, markersInd, categoryInd, id, rating } (id)}
-      <TaskItem
-        {done}
-        {description}
-        {id}
-        {hour}
-        {minute}
-        {markersInd}
-        {categoryInd}
-        {rating}
-        on:remove
-        on:changeDone
-        on:changeRating
-        on:editTaskClick
-      />
-    {/each}
-  {/if}
+    <p class="message">{textMessage[currentFilter]}</p>
+  {/each}
 </div>
 
 <style>
