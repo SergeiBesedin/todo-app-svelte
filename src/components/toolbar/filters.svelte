@@ -10,9 +10,11 @@
   ];
 
   const changeFilter = (e) => {
-    dispatch('changeFilter', {
-      filter: e.target,
-    });
+    if (e.target.tagName === 'SPAN') {
+      dispatch('changeFilter', {
+        filter: e.target.textContent,
+      });
+    }
   };
 </script>
 

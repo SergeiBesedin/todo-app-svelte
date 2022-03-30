@@ -6,6 +6,7 @@
   import TasksList from './components/list/tasks-list.svelte';
   import Buttons from './components/buttons.svelte';
   import ModalConfirm from './components/modal-windows/modal-confirm.svelte';
+  import Auth from './components/modal-windows/auth-modal.svelte';
 
   let currentFilter = 'All';
   let editTaskId;
@@ -13,6 +14,7 @@
   let visibleTaskCreation = false;
   let visibleCalendar = false;
   let visibleConfirmModal = false;
+  let visibleAuthForm = true;
 
   const updateDate = () => {
     date.update((value) => {
@@ -40,9 +42,7 @@
   updateTasks($date.getFullDate());
 
   const handleChangeFilter = (e) => {
-    if (e.detail.filter.tagName === 'SPAN') {
-      currentFilter = e.detail.filter.textContent;
-    }
+    currentFilter = e.detail.filter;
   };
 
   const filterTasks = (tasks, activeFilter) => {
@@ -120,7 +120,7 @@
 
 <div class="wrapper">
   <div class="container">
-    <div class="app">
+    <div class="app" class:block={visibleConfirmModal}>
       <Header {visibleCalendar} on:click={handleOpenCalendar} {updateTasks} />
       <main>
         <Toolbar
@@ -145,6 +145,7 @@
       on:change={() => updateTasks($date.getFullDate())}
     />
     <ModalConfirm {visibleConfirmModal} {handleConfirmDel} />
+    <Auth {visibleAuthForm} />
   </div>
 </div>
 
@@ -167,6 +168,10 @@
   .app {
     position: relative;
     box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
+  }
+
+  .block {
+    z-index: -1;
   }
 
   main {

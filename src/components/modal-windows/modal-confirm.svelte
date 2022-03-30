@@ -20,7 +20,6 @@
   .modal-dialog {
     z-index: 101;
     position: absolute;
-    top: 0;
     left: 50px;
     right: 50px;
     top: 50%;
