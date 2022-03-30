@@ -1,12 +1,9 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
   import { date, tasks, createTaskData } from '../../store/store';
+  import { makeTwoDigits } from '../../utils/utils';
   export let editTaskId;
   export let editTask;
-
-  const makeTwoDigits = (num) => {
-    return num.toString().padStart(2, 0);
-  };
 
   let totalDays = $date.getTotalDays();
   let hour = makeTwoDigits($date.hour);
