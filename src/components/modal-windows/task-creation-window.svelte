@@ -90,7 +90,6 @@
             <option value={i + 1}>{i + 1}</option>
           {/each}
         </select>
-        -
         <select
           name="select"
           bind:value={$date.month}
@@ -102,10 +101,6 @@
             <option value={i}>{month}</option>
           {/each}
         </select>
-        -
-        <select name="select" bind:value={$date.year} disabled={editTask}>
-          <option value={$date.year} selected>{$date.year}</option>
-        </select>
       </div>
 
       <div class="task-time" on:change={changeTimeHandler}>
@@ -115,7 +110,6 @@
             <option value={makeTwoDigits(i + 1)}>{makeTwoDigits(i + 1)}</option>
           {/each}
         </select>
-        :
         <select name="select" bind:value={minutes}>
           {#each Array.from({ length: 60 }) as minutes, i}
             <option value={makeTwoDigits(i)}>{makeTwoDigits(i)}</option>
@@ -136,7 +130,9 @@
         <span>Marker</span>
         <select name="select" bind:value={$createTaskData.markersInd}>
           {#each $createTaskData.markers as marker, i}
-            <option value={i} style={`color: ${marker}`}>{marker}</option>
+            <option value={i} style={`background-color: ${marker}`}
+              >{marker}</option
+            >
           {/each}
         </select>
       </div>
@@ -293,6 +289,7 @@
   select {
     padding: 10px;
     font-size: 18px;
+    text-align: center;
     border-radius: 5px;
   }
 </style>
