@@ -21,9 +21,6 @@
       {markersInd}
       {categoryInd}
       {rating}
-      on:remove
-      on:changeDone
-      on:changeRating
       on:editTaskClick
     />
   {:else}

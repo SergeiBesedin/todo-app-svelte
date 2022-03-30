@@ -1,5 +1,5 @@
 <script>
-  import { date } from '../store/store';
+  import { date } from '../../store/store';
 </script>
 
 <div class="date">

@@ -1,8 +1,8 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { createTaskData } from '../../store/store';
+  import { createTaskData, date, tasks } from '../../../store/store';
   import Star from './star.svelte';
-  import triangularArrow from '../../assets/icons/triangular-arrow.png';
+  import triangularArrow from '../../../assets/icons/triangular-arrow.png';
   export let done;
   export let id;
   export let description;
@@ -13,18 +13,46 @@
   export let markersInd;
 
   const dispatch = createEventDispatcher();
-  const numTotalStars = 3;
 
-  const handleDoneChange = (e) => {
-    dispatch('changeDone', { checked: e.target.checked, id });
+  const changeDoneHandler = (e) => {
+    tasks.update((items) => {
+      return {
+        ...items,
+        [$date.getFullDate()]: items[$date.getFullDate()].map((item) => {
+          if (item.id === id) {
+            return { ...item, done: e.target.checked };
+          } else {
+            return item;
+          }
+        }),
+      };
+    });
   };
 
   const handleChangeRating = (e) => {
-    dispatch('changeRating', { rating: e.target.value, id });
+    tasks.update((items) => {
+      return {
+        ...items,
+        [$date.getFullDate()]: items[$date.getFullDate()].map((item) => {
+          if (item.id === id) {
+            return { ...item, rating: e.target.value };
+          } else {
+            return item;
+          }
+        }),
+      };
+    });
   };
 
   const handleRemove = (id) => {
-    dispatch('remove', { id });
+    tasks.update((items) => {
+      return {
+        ...items,
+        [$date.getFullDate()]: items[$date.getFullDate()].filter((item) => {
+          return item.id !== id;
+        }),
+      };
+    });
   };
 
   const handleEditTaskClick = (
@@ -64,13 +92,8 @@
         <p>{`${hour}:${minute}`}</p>
         <div class="task-raiting">
           <div class="raiting-items">
-            {#each Array.from({ length: numTotalStars }) as star, i (id + i)}
-              <Star
-                num={i + 1}
-                {id}
-                {rating}
-                on:input={(e) => handleChangeRating(e)}
-              />
+            {#each Array.from({ length: 3 }) as star, i (id + i)}
+              <Star num={i + 1} {id} {rating} on:input={handleChangeRating} />
             {/each}
           </div>
         </div>
@@ -82,7 +105,7 @@
             type="checkbox"
             checked={done}
             class="custom-checkbox"
-            on:input={(e) => handleDoneChange(e)}
+            on:input={changeDoneHandler}
           />
           <label for={`checkbox-${id}`} />
         </div>

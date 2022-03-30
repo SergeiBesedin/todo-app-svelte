@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { date } from '../store/store';
-  import calendar from '../assets/icons/calendar.png';
+  import { date } from '../../store/store';
+  import calendar from '../../assets/icons/calendar.png';
 
   const dispatch = createEventDispatcher();
 

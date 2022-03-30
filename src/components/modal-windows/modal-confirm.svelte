@@ -1,11 +1,17 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
-  const dispatch = createEventDispatcher();
+  import { tasks, date } from '../../store/store';
 
-  const handleConfirmDel = (conf) => {
-    dispatch('confirm', {
-      conf,
-    });
+  const handleConfirmDel = (confirm) => {
+    if (confirm) {
+      tasks.update((items) => {
+        return {
+          ...items,
+          [$date.getFullDate()]: [],
+        };
+      });
+    }
+    document.querySelector('.modal-dialog').style.display = 'none';
+    document.querySelector('.app').style.zIndex = '0';
   };
 </script>
 

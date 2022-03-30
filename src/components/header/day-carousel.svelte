@@ -1,9 +1,9 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { onMount, afterUpdate } from 'svelte';
-  import { date } from '../store/store';
-  import arrowNext from '../assets/icons/next-arrow.png';
-  import arrowPrev from '../assets/icons/prev-arrow.png';
+  import { date } from '../../store/store';
+  import arrowNext from '../../assets/icons/next-arrow.png';
+  import arrowPrev from '../../assets/icons/prev-arrow.png';
 
   const dispatch = createEventDispatcher();
   $: currentPosition = $date.day;

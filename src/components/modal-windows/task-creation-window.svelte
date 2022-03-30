@@ -1,5 +1,7 @@
 <script>
-  import { date, createTaskData } from '../store/store';
+  import { v4 as uuidv4 } from 'uuid';
+  import { date, tasks, createTaskData } from '../../store/store';
+  export let editTaskId;
   export let editTask;
 
   const makeTwoDigits = (num) => {
@@ -15,11 +17,73 @@
       return { ...value, hour, minutes };
     });
   };
+
+  const handleCloseCreateTask = () => {
+    editTask = false;
+    createTaskData.update((items) => {
+      return {
+        ...items,
+        descriptionTask: '',
+        categoryInd: 0,
+        markersInd: 0,
+      };
+    });
+    document.querySelector('.task-creation-modal').style.display = 'none';
+  };
+
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    if (editTask === true) {
+      handleEditTask();
+    } else {
+      tasks.update((items) => {
+        return {
+          ...items,
+          [$date.getFullDate()]: [
+            ...items[$date.getFullDate()],
+            {
+              id: uuidv4(),
+              hour: $date.hour,
+              minute: $date.minutes,
+              markersInd: $createTaskData.markersInd,
+              categoryInd: $createTaskData.categoryInd,
+              description: $createTaskData.descriptionTask,
+              done: false,
+              rating: 0,
+            },
+          ],
+        };
+      });
+    }
+    handleCloseCreateTask();
+  };
+
+  const handleEditTask = () => {
+    tasks.update((items) => {
+      return {
+        ...items,
+        [$date.getFullDate()]: items[$date.getFullDate()].map((item) => {
+          if (item.id === editTaskId) {
+            return {
+              ...item,
+              hour: $date.hour,
+              minute: $date.minutes,
+              markersInd: $createTaskData.markersInd,
+              categoryInd: $createTaskData.categoryInd,
+              description: $createTaskData.descriptionTask,
+            };
+          } else {
+            return item;
+          }
+        }),
+      };
+    });
+  };
 </script>
 
 <div class="task-creation-modal">
-  <div class="task-creation-close" on:click />
-  <form on:submit>
+  <div class="task-creation-close" on:click={handleCloseCreateTask} />
+  <form on:submit={handleAddTask}>
     <div class="task-creation">
       <h2>Create task</h2>
       <div class="task-date" on:change>

@@ -1,10 +1,27 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { tasks, date } from '../../store/store';
   export let filteredTasks;
 
-  const dispatch = createEventDispatcher();
   const sortTasksByOption = (e) => {
-    dispatch('sort', { option: e.target.value });
+    if (e.target.value === 'time') {
+      tasks.update((items) => {
+        return {
+          ...items,
+          [$date.getFullDate()]: items[$date.getFullDate()].sort((a, b) => {
+            return `${a.hour}${a.minute}` - `${b.hour}${b.minute}`;
+          }),
+        };
+      });
+    } else {
+      tasks.update((items) => {
+        return {
+          ...items,
+          [$date.getFullDate()]: items[$date.getFullDate()].sort((a, b) => {
+            return b[e.target.value] - a[e.target.value];
+          }),
+        };
+      });
+    }
   };
 </script>
 
