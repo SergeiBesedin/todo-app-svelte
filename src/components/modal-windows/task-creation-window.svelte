@@ -28,8 +28,7 @@
     document.querySelector('.task-creation-modal').style.display = 'none';
   };
 
-  const handleAddTask = (e) => {
-    e.preventDefault();
+  const handleAddTask = () => {
     if (editTask === true) {
       handleEditTask();
     } else {
@@ -80,7 +79,7 @@
 
 <div class="task-creation-modal">
   <div class="task-creation-close" on:click={handleCloseCreateTask} />
-  <form on:submit={handleAddTask}>
+  <form on:submit|preventDefault={handleAddTask}>
     <div class="task-creation">
       <h2>Create task</h2>
       <div class="task-date" on:change>

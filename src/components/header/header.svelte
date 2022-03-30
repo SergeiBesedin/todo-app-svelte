@@ -1,15 +1,31 @@
 <script>
+  import { date } from '../../store/store';
   import CurrentDate from './current-date.svelte';
   import Calendar from './calendar.svelte';
   import DayCarousel from './day-carousel.svelte';
+  export let updateTasks = (date) => {
+    updateTasks(date);
+  };
+
+  const handleChangeDate = (e) => {
+    date.update((value) => {
+      return {
+        ...value,
+        day: Number(e.detail.day),
+        month: Number(e.detail.month),
+        dayOfTheWeek: new Date($date.year, $date.month, e.detail.day).getDay(),
+      };
+    });
+    updateTasks($date.getFullDate());
+  };
 </script>
 
 <header>
   <div class="header-date">
     <CurrentDate />
-    <Calendar on:click on:changeDate />
+    <Calendar on:click on:changeDate={handleChangeDate} />
   </div>
-  <DayCarousel on:changeDate />
+  <DayCarousel on:changeDate={handleChangeDate} />
 </header>
 
 <style>

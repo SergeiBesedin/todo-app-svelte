@@ -13,9 +13,9 @@ export const createTaskData = writable({
 export const basket = writable({});
 
 export const date = writable({
-  day: new Date().getDate(),
-  month: new Date().getMonth(),
-  year: new Date().getFullYear(),
+  day: '',
+  month: '',
+  year: '',
   months: [
     'Jan',
     'Feb',
@@ -31,9 +31,9 @@ export const date = writable({
     'Dec',
   ],
   daysOfTheWeek: ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],
-  dayOfTheWeek: new Date().getDay(),
-  hour: new Date().getHours(),
-  minutes: new Date().getMinutes(),
+  dayOfTheWeek: '',
+  hour: '',
+  minutes: '',
   getMonth() {
     return this.months[this.month];
   },

@@ -12,7 +12,6 @@
 
 <style>
   .toolbar {
-    background: #ffffff;
     position: relative;
     display: flex;
     justify-content: center;

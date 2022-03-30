@@ -12,6 +12,21 @@
   let editTaskId = null;
   let editTask = false;
 
+  const updateDate = () => {
+    date.update((value) => {
+      return {
+        ...value,
+        day: new Date().getDate(),
+        month: new Date().getMonth(),
+        year: new Date().getFullYear(),
+        dayOfTheWeek: new Date().getDay(),
+        hour: new Date().getHours(),
+        minutes: new Date().getMinutes(),
+      };
+    });
+  };
+  updateDate();
+
   const updateTasks = (date) => {
     if ($tasks.hasOwnProperty(date)) {
       return;
@@ -21,18 +36,6 @@
     });
   };
   updateTasks($date.getFullDate());
-
-  const handleChangeDate = (e) => {
-    date.update((value) => {
-      return {
-        ...value,
-        day: Number(e.detail.day),
-        month: Number(e.detail.month),
-        dayOfTheWeek: new Date($date.year, $date.month, e.detail.day).getDay(),
-      };
-    });
-    updateTasks($date.getFullDate());
-  };
 
   const handleChangeFilter = (e) => {
     if (e.detail.filter.tagName === 'SPAN') {
@@ -93,13 +96,13 @@
 <div class="wrapper">
   <div class="container">
     <div class="app">
-      <Header on:click={openCalendar} on:changeDate={handleChangeDate} />
-      <Toolbar
-        {filteredTasks}
-        {currentFilter}
-        on:changeFilter={handleChangeFilter}
-      />
+      <Header on:click={openCalendar} {updateTasks} />
       <main>
+        <Toolbar
+          {filteredTasks}
+          {currentFilter}
+          on:changeFilter={handleChangeFilter}
+        />
         <TasksList
           {filteredTasks}
           {currentFilter}
