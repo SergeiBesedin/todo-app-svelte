@@ -1,9 +1,12 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
+  import { fade } from 'svelte/transition';
   import { date, tasks, createTaskData } from '../../store/store';
   import { makeTwoDigits } from '../../utils/utils';
   export let editTaskId;
   export let editTask;
+  export let visibleTaskCreation;
+  export let handleCloseCreateTask = () => handleCloseCreateTask;
 
   let totalDays = $date.getTotalDays();
   let hour = makeTwoDigits($date.hour);
@@ -13,19 +16,6 @@
     date.update((value) => {
       return { ...value, hour, minutes };
     });
-  };
-
-  const handleCloseCreateTask = () => {
-    editTask = false;
-    createTaskData.update((items) => {
-      return {
-        ...items,
-        descriptionTask: '',
-        categoryInd: 0,
-        markersInd: 0,
-      };
-    });
-    document.querySelector('.task-creation-modal').style.display = 'none';
   };
 
   const handleAddTask = () => {
@@ -77,90 +67,93 @@
   };
 </script>
 
-<div class="task-creation-modal">
-  <div class="task-creation-close" on:click={handleCloseCreateTask} />
-  <form on:submit|preventDefault={handleAddTask}>
-    <div class="task-creation">
-      <h2>Create task</h2>
-      <div class="task-date" on:change>
-        <span>Date:</span>
+{#if visibleTaskCreation}
+  <div class="task-creation-modal" transition:fade>
+    <div class="task-creation-close" on:click />
+    <form on:submit|preventDefault={handleAddTask}>
+      <div class="task-creation">
+        <h2>Create task</h2>
+        <div class="task-date" on:change>
+          <span>Date:</span>
 
-        <select name="select" bind:value={$date.day} disabled={editTask}>
-          {#each Array.from({ length: totalDays }) as day, i}
-            <option value={i + 1}>{i + 1}</option>
-          {/each}
-        </select>
-        <select
-          name="select"
-          bind:value={$date.month}
-          disabled={editTask}
-          on:change={(e) =>
-            (totalDays = $date.getTotalDays(Number(e.target.value)))}
-        >
-          {#each $date.months as month, i}
-            <option value={i}>{month}</option>
-          {/each}
-        </select>
-      </div>
+          <select name="select" bind:value={$date.day} disabled={editTask}>
+            {#each Array.from({ length: totalDays }) as day, i}
+              <option value={i + 1}>{i + 1}</option>
+            {/each}
+          </select>
+          <select
+            name="select"
+            bind:value={$date.month}
+            disabled={editTask}
+            on:change={(e) =>
+              (totalDays = $date.getTotalDays(Number(e.target.value)))}
+          >
+            {#each $date.months as month, i}
+              <option value={i}>{month}</option>
+            {/each}
+          </select>
+        </div>
 
-      <div class="task-time" on:change={changeTimeHandler}>
-        <span>Time:</span>
-        <select name="select" bind:value={hour}>
-          {#each Array.from({ length: 24 }) as hour, i}
-            <option value={makeTwoDigits(i + 1)}>{makeTwoDigits(i + 1)}</option>
-          {/each}
-        </select>
-        <select name="select" bind:value={minutes}>
-          {#each Array.from({ length: 60 }) as minutes, i}
-            <option value={makeTwoDigits(i)}>{makeTwoDigits(i)}</option>
-          {/each}
-        </select>
-      </div>
+        <div class="task-time" on:change={changeTimeHandler}>
+          <span>Time:</span>
+          <select name="select" bind:value={hour}>
+            {#each Array.from({ length: 24 }) as hour, i}
+              <option value={makeTwoDigits(i + 1)}
+                >{makeTwoDigits(i + 1)}</option
+              >
+            {/each}
+          </select>
+          <select name="select" bind:value={minutes}>
+            {#each Array.from({ length: 60 }) as minutes, i}
+              <option value={makeTwoDigits(i)}>{makeTwoDigits(i)}</option>
+            {/each}
+          </select>
+        </div>
 
-      <div class="task-category">
-        <span>Category:</span>
-        <select name="select" bind:value={$createTaskData.categoryInd}>
-          {#each $createTaskData.category as category, i}
-            <option value={i}>{category}</option>
-          {/each}
-        </select>
-      </div>
+        <div class="task-category">
+          <span>Category:</span>
+          <select name="select" bind:value={$createTaskData.categoryInd}>
+            {#each $createTaskData.category as category, i}
+              <option value={i}>{category}</option>
+            {/each}
+          </select>
+        </div>
 
-      <div class="task-marker">
-        <span>Marker</span>
-        <select name="select" bind:value={$createTaskData.markersInd}>
-          {#each $createTaskData.markers as marker, i}
-            <option value={i} style={`background-color: ${marker}`}
-              >{marker}</option
-            >
-          {/each}
-        </select>
-      </div>
+        <div class="task-marker">
+          <span>Marker</span>
+          <select name="select" bind:value={$createTaskData.markersInd}>
+            {#each $createTaskData.markers as marker, i}
+              <option value={i} style={`background-color: ${marker}`}
+                >{marker}</option
+              >
+            {/each}
+          </select>
+        </div>
 
-      <div class="task-description">
-        <textarea
-          bind:value={$createTaskData.descriptionTask}
-          maxlength="30"
-          minlength="5"
-          required
-          name="description"
-          placeholder="Description"
-        />
-      </div>
+        <div class="task-description">
+          <textarea
+            bind:value={$createTaskData.descriptionTask}
+            maxlength="30"
+            minlength="5"
+            required
+            name="description"
+            placeholder="Description"
+          />
+        </div>
 
-      <div class="task-action">
-        <button class="task-add" type="submit">
-          <div class="check" />
-        </button>
+        <div class="task-action">
+          <button class="task-add" type="submit">
+            <div class="check" />
+          </button>
+        </div>
       </div>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
+{/if}
 
 <style>
   .task-creation-modal {
     user-select: none;
-    display: none;
     z-index: 101;
     box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
     position: absolute;

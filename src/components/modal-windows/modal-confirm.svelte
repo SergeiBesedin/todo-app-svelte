@@ -1,28 +1,20 @@
 <script>
-  import { tasks, date } from '../../store/store';
-
-  const handleConfirmDel = (confirm) => {
-    if (confirm) {
-      tasks.update((items) => {
-        return {
-          ...items,
-          [$date.getFullDate()]: [],
-        };
-      });
-    }
-    document.querySelector('.modal-dialog').style.display = 'none';
-    document.querySelector('.app').style.zIndex = '0';
-  };
+  import { fade } from 'svelte/transition';
+  export let visibleConfirmModal;
+  export let handleConfirmDel = (confirm) => handleConfirmDel(confirm);
 </script>
 
-<div class="modal-dialog">
-  <h2>Список дел на текущий день будет полностью очищен. Вы уверены?</h2>
-  <button class="clear" on:click={() => handleConfirmDel(true)}>Очистить</button
-  >
-  <button class="cancel" on:click={() => handleConfirmDel(false)}
-    >Отменить</button
-  >
-</div>
+{#if visibleConfirmModal}
+  <div class="modal-dialog" transition:fade>
+    <h2>Список дел на текущий день будет полностью очищен. Вы уверены?</h2>
+    <button class="clear" on:click={() => handleConfirmDel(true)}
+      >Очистить</button
+    >
+    <button class="cancel" on:click={() => handleConfirmDel(false)}
+      >Отменить</button
+    >
+  </div>
+{/if}
 
 <style>
   .modal-dialog {
@@ -33,7 +25,6 @@
     right: 50px;
     top: 50%;
     transform: translateY(-50%);
-    display: none;
     border-radius: 10px;
     padding: 8px;
     text-align: center;

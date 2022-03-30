@@ -8,9 +8,11 @@
   import ModalConfirm from './components/modal-windows/modal-confirm.svelte';
 
   let currentFilter = 'All';
-  let calendarOpen = false;
-  let editTaskId = null;
+  let editTaskId;
   let editTask = false;
+  let visibleTaskCreation = false;
+  let visibleCalendar = false;
+  let visibleConfirmModal = false;
 
   const updateDate = () => {
     date.update((value) => {
@@ -45,28 +47,40 @@
 
   const filterTasks = (tasks, activeFilter) => {
     if (activeFilter === 'Active') {
-      return tasks.filter((t) => !t.done);
+      return tasks.filter((task) => !task.done);
     } else if (activeFilter === 'Completed') {
-      return tasks.filter((t) => t.done);
+      return tasks.filter((task) => task.done);
     } else {
       return [...tasks];
     }
   };
 
-  const handleOpenCreateTask = () => {
-    if (calendarOpen) {
-      openCalendar();
-    }
-    document.querySelector('.task-creation-modal').style.display = 'block';
+  const handleOpenCalendar = () => {
+    visibleCalendar = !visibleCalendar;
   };
 
-  const openCalendar = () => {
-    calendarOpen = !calendarOpen;
-    if (calendarOpen) {
-      document.querySelector('.calendar-window').style.display = 'block';
-    } else {
-      document.querySelector('.calendar-window').style.display = 'none';
+  const handleClearClick = () => {
+    visibleConfirmModal = true;
+  };
+
+  const handleOpenCreateTask = () => {
+    if (visibleCalendar) {
+      openCalendar();
     }
+    visibleTaskCreation = true;
+  };
+
+  const handleCloseCreateTask = () => {
+    editTask = false;
+    createTaskData.update((items) => {
+      return {
+        ...items,
+        descriptionTask: '',
+        categoryInd: 0,
+        markersInd: 0,
+      };
+    });
+    visibleTaskCreation = false;
   };
 
   const handleEditTaskClick = (e) => {
@@ -90,13 +104,24 @@
     handleOpenCreateTask();
   };
 
+  const handleConfirmDel = (confirm) => {
+    if (confirm) {
+      tasks.update((items) => {
+        return {
+          ...items,
+          [$date.getFullDate()]: [],
+        };
+      });
+    }
+    visibleConfirmModal = false;
+  };
   $: filteredTasks = filterTasks($tasks[$date.getFullDate()], currentFilter);
 </script>
 
 <div class="wrapper">
   <div class="container">
     <div class="app">
-      <Header on:click={openCalendar} {updateTasks} />
+      <Header {visibleCalendar} on:click={handleOpenCalendar} {updateTasks} />
       <main>
         <Toolbar
           {filteredTasks}
@@ -108,15 +133,18 @@
           {currentFilter}
           on:editTaskClick={handleEditTaskClick}
         />
-        <Buttons on:click={handleOpenCreateTask} />
+        <Buttons {handleOpenCreateTask} {handleClearClick} />
       </main>
     </div>
     <TaskCreation
       {editTaskId}
       {editTask}
+      {visibleTaskCreation}
+      {handleCloseCreateTask}
+      on:click={handleCloseCreateTask}
       on:change={() => updateTasks($date.getFullDate())}
     />
-    <ModalConfirm />
+    <ModalConfirm {visibleConfirmModal} {handleConfirmDel} />
   </div>
 </div>
 

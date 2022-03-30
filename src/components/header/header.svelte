@@ -3,9 +3,8 @@
   import CurrentDate from './current-date.svelte';
   import Calendar from './calendar.svelte';
   import DayCarousel from './day-carousel.svelte';
-  export let updateTasks = (date) => {
-    updateTasks(date);
-  };
+  export let updateTasks = (date) => updateTasks(date);
+  export let visibleCalendar;
 
   const handleChangeDate = (e) => {
     date.update((value) => {
@@ -23,7 +22,7 @@
 <header>
   <div class="header-date">
     <CurrentDate />
-    <Calendar on:click on:changeDate={handleChangeDate} />
+    <Calendar {visibleCalendar} on:click on:changeDate={handleChangeDate} />
   </div>
   <DayCarousel on:changeDate={handleChangeDate} />
 </header>

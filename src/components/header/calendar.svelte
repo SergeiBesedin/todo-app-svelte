@@ -1,7 +1,9 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { fade } from 'svelte/transition';
   import { date } from '../../store/store';
   import calendar from '../../assets/icons/calendar.png';
+  export let visibleCalendar;
 
   const dispatch = createEventDispatcher();
 
@@ -13,16 +15,18 @@
 </script>
 
 <div class="calendar">
-  <div class="calendar-window">
-    <div class="calendar-year">{$date.year} г.</div>
-    <div class="calendar-months" on:click={clickByMonthHandler}>
-      {#each $date.months as month, i}
-        <span id={i} class:active-month={month === $date.getMonth()}
-          >{month}</span
-        >
-      {/each}
+  {#if visibleCalendar}
+    <div class="calendar-window" transition:fade>
+      <div class="calendar-year">{$date.year} г.</div>
+      <div class="calendar-months" on:click={clickByMonthHandler}>
+        {#each $date.months as month, i}
+          <span id={i} class:active-month={month === $date.getMonth()}
+            >{month}</span
+          >
+        {/each}
+      </div>
     </div>
-  </div>
+  {/if}
 
   <div class="calendar-icon" on:click>
     <img src={calendar} alt="calendar" />
@@ -39,7 +43,6 @@
     position: absolute;
     top: 5px;
     right: 50px;
-    display: none;
     color: #ffffff;
     background: #ffffff;
     border-radius: 5px;

@@ -1,22 +1,16 @@
 <script>
   import { tasks, date } from '../store/store.js';
   import clearIcon from '../assets/icons/clear.png';
-
-  const handleClear = () => {
-    if ($tasks[$date.getFullDate()].length === 0) {
-      return;
-    }
-    document.querySelector('.modal-dialog').style.display = 'block';
-    document.querySelector('.app').style.zIndex = '-1';
-  };
+  export let handleOpenCreateTask = () => handleOpenCreateTask;
+  export let handleClearClick = () => handleClearClick;
 </script>
 
 <div class="buttons">
-  <button class="btn-add" on:click />
+  <button class="btn-add" on:click={handleOpenCreateTask} />
   <div
     class="btn-clear"
     class:visible={$tasks[$date.getFullDate()].length > 0}
-    on:click={handleClear}
+    on:click={handleClearClick}
   >
     <img src={clearIcon} alt="clear" />
   </div>
