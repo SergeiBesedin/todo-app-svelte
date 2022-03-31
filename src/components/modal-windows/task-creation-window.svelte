@@ -1,9 +1,7 @@
 <script>
-  import { v4 as uuidv4 } from 'uuid';
   import { fade } from 'svelte/transition';
   import { date, tasks, createTaskData } from '../../store/store';
   import { makeTwoDigits } from '../../utils/utils';
-  export let editTaskId;
   export let editTask;
   export let visibleTaskCreation;
   export let handleCloseCreateTask = () => handleCloseCreateTask;
@@ -18,59 +16,35 @@
     });
   };
 
-  const handleAddTask = () => {
-    if (editTask === true) {
-      handleEditTask();
+  const handleClickOnOk = () => {
+    if (editTask !== true) {
+      tasks.addTask(
+        $date.getFullDate(),
+        $date.hour,
+        $date.minutes,
+        $createTaskData.markersInd,
+        $createTaskData.categoryInd,
+        $createTaskData.descriptionTask
+      );
     } else {
-      tasks.update((items) => {
-        return {
-          ...items,
-          [$date.getFullDate()]: [
-            ...items[$date.getFullDate()],
-            {
-              id: uuidv4(),
-              hour: $date.hour,
-              minute: $date.minutes,
-              markersInd: $createTaskData.markersInd,
-              categoryInd: $createTaskData.categoryInd,
-              description: $createTaskData.descriptionTask,
-              done: false,
-              rating: 0,
-            },
-          ],
-        };
-      });
+      tasks.editTask(
+        $date.getFullDate(),
+        $date.hour,
+        $date.minutes,
+        $createTaskData.markersInd,
+        $createTaskData.categoryInd,
+        $createTaskData.descriptionTask,
+        $createTaskData.currentId
+      );
     }
     handleCloseCreateTask();
-  };
-
-  const handleEditTask = () => {
-    tasks.update((items) => {
-      return {
-        ...items,
-        [$date.getFullDate()]: items[$date.getFullDate()].map((item) => {
-          if (item.id === editTaskId) {
-            return {
-              ...item,
-              hour: $date.hour,
-              minute: $date.minutes,
-              markersInd: $createTaskData.markersInd,
-              categoryInd: $createTaskData.categoryInd,
-              description: $createTaskData.descriptionTask,
-            };
-          } else {
-            return item;
-          }
-        }),
-      };
-    });
   };
 </script>
 
 {#if visibleTaskCreation}
   <div class="task-creation-modal" transition:fade>
     <div class="task-creation-close" on:click />
-    <form on:submit|preventDefault={handleAddTask}>
+    <form on:submit|preventDefault={handleClickOnOk}>
       <div class="task-creation">
         <h2>Create task</h2>
         <div class="task-date" on:change>

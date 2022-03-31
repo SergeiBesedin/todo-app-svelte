@@ -1,12 +1,13 @@
 <script>
+  import { fade } from 'svelte/transition';
   export let visibleAuthForm;
 </script>
 
 {#if visibleAuthForm}
-  <form>
-    <div class="auth">
-      <div class="auth-modal">
-        <div class="auth-close" on:click />
+  <div class="auth" transition:fade>
+    <div class="auth-modal">
+      <div class="auth-close" on:click on:click />
+      <form>
         <div class="auth-login">
           <div>Login:</div>
           <input minlength="6" required />
@@ -19,9 +20,9 @@
           <button type="submit">log in</button>
           <button>register</button>
         </div>
-      </div>
+      </form>
     </div>
-  </form>
+  </div>
 {/if}
 
 <style>
@@ -34,7 +35,7 @@
     transform: translateY(-50%);
     background: #f6a9ff;
     color: #ffffff;
-
+    box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
     border-radius: 10px;
   }
 
@@ -88,6 +89,11 @@
   .auth-login,
   .auth-pass {
     margin-bottom: 10px;
+  }
+
+  .auth-login div,
+  .auth-pass div {
+    margin-bottom: 5px;
   }
 
   .auth-btns {

@@ -4,23 +4,9 @@
 
   const sortTasksByOption = (e) => {
     if (e.target.value === 'time') {
-      tasks.update((items) => {
-        return {
-          ...items,
-          [$date.getFullDate()]: items[$date.getFullDate()].sort((a, b) => {
-            return `${a.hour}${a.minute}` - `${b.hour}${b.minute}`;
-          }),
-        };
-      });
+      tasks.sortTasksByTime($date.getFullDate());
     } else {
-      tasks.update((items) => {
-        return {
-          ...items,
-          [$date.getFullDate()]: items[$date.getFullDate()].sort((a, b) => {
-            return b[e.target.value] - a[e.target.value];
-          }),
-        };
-      });
+      tasks.sortTasks($date.getFullDate(), e.target.value);
     }
   };
 </script>

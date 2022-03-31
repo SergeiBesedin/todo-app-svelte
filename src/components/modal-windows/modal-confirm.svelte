@@ -1,16 +1,16 @@
 <script>
   import { fade } from 'svelte/transition';
   export let visibleConfirmModal;
-  export let handleConfirmDel = (confirm) => handleConfirmDel(confirm);
+  export let handleClearList = (clear) => handleClearList(clear);
 </script>
 
 {#if visibleConfirmModal}
   <div class="modal-dialog" transition:fade>
     <h2>Список дел на текущий день будет полностью очищен. Вы уверены?</h2>
-    <button class="clear" on:click={() => handleConfirmDel(true)}
+    <button class="clear" on:click={() => handleClearList(true)}
       >Очистить</button
     >
-    <button class="cancel" on:click={() => handleConfirmDel(false)}
+    <button class="cancel" on:click={() => handleClearList(false)}
       >Отменить</button
     >
   </div>

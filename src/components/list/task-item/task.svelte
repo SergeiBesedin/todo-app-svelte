@@ -14,45 +14,16 @@
 
   const dispatch = createEventDispatcher();
 
-  const changeDoneHandler = (e) => {
-    tasks.update((items) => {
-      return {
-        ...items,
-        [$date.getFullDate()]: items[$date.getFullDate()].map((item) => {
-          if (item.id === id) {
-            return { ...item, done: e.target.checked };
-          } else {
-            return item;
-          }
-        }),
-      };
-    });
+  const handleChangeDone = (e) => {
+    tasks.taskCompleted($date.getFullDate(), e.target.checked, id);
   };
 
   const handleChangeRating = (e) => {
-    tasks.update((items) => {
-      return {
-        ...items,
-        [$date.getFullDate()]: items[$date.getFullDate()].map((item) => {
-          if (item.id === id) {
-            return { ...item, rating: e.target.value };
-          } else {
-            return item;
-          }
-        }),
-      };
-    });
+    tasks.changeRating($date.getFullDate(), e.target.value, id);
   };
 
   const handleRemove = (id) => {
-    tasks.update((items) => {
-      return {
-        ...items,
-        [$date.getFullDate()]: items[$date.getFullDate()].filter((item) => {
-          return item.id !== id;
-        }),
-      };
-    });
+    tasks.taskRemove($date.getFullDate(), id);
   };
 
   const handleEditTaskClick = (
@@ -105,7 +76,7 @@
             type="checkbox"
             checked={done}
             class="custom-checkbox"
-            on:input={changeDoneHandler}
+            on:input={handleChangeDone}
           />
           <label for={`checkbox-${id}`} />
         </div>

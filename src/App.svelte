@@ -9,7 +9,6 @@
   import Auth from './components/modal-windows/auth-modal.svelte';
 
   let currentFilter = 'All';
-  let editTaskId;
   let editTask = false;
   let visibleTaskCreation = false;
   let visibleCalendar = false;
@@ -35,9 +34,7 @@
     if ($tasks.hasOwnProperty(date)) {
       return;
     }
-    tasks.update((items) => {
-      return { ...items, [date]: [] };
-    });
+    tasks.updateTasks(date);
   };
   updateTasks($date.getFullDate());
 
@@ -55,6 +52,10 @@
     }
   };
 
+  const handleCloseAuthForm = () => {
+    visibleAuthForm = false;
+  };
+
   const handleOpenCalendar = () => {
     visibleCalendar = !visibleCalendar;
   };
@@ -65,7 +66,7 @@
 
   const handleOpenCreateTask = () => {
     if (visibleCalendar) {
-      openCalendar();
+      handleOpenCalendar();
     }
     visibleTaskCreation = true;
   };
@@ -84,7 +85,6 @@
   };
 
   const handleEditTaskClick = (e) => {
-    editTaskId = e.detail.id;
     editTask = true;
     createTaskData.update((data) => {
       return {
@@ -92,6 +92,7 @@
         descriptionTask: e.detail.description,
         categoryInd: e.detail.categoryInd,
         markersInd: e.detail.markersInd,
+        currentId: e.detail.id,
       };
     });
     date.update((value) => {
@@ -104,14 +105,9 @@
     handleOpenCreateTask();
   };
 
-  const handleConfirmDel = (confirm) => {
+  const handleClearList = (confirm) => {
     if (confirm) {
-      tasks.update((items) => {
-        return {
-          ...items,
-          [$date.getFullDate()]: [],
-        };
-      });
+      tasks.clearTasks($date.getFullDate());
     }
     visibleConfirmModal = false;
   };
@@ -137,15 +133,14 @@
       </main>
     </div>
     <TaskCreation
-      {editTaskId}
       {editTask}
       {visibleTaskCreation}
       {handleCloseCreateTask}
       on:click={handleCloseCreateTask}
       on:change={() => updateTasks($date.getFullDate())}
     />
-    <ModalConfirm {visibleConfirmModal} {handleConfirmDel} />
-    <Auth {visibleAuthForm} />
+    <ModalConfirm {visibleConfirmModal} {handleClearList} />
+    <Auth {visibleAuthForm} on:click={handleCloseAuthForm} />
   </div>
 </div>
 
