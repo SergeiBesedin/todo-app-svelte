@@ -1,6 +1,6 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
-  import { createTaskData, date, tasks } from '../../../store/store';
+  import { createEventDispatcher, getContext } from 'svelte';
+  import { createTaskData, date } from '../../../store/store';
   import Star from './star.svelte';
   import triangularArrow from '../../../assets/icons/triangular-arrow.png';
   export let done;
@@ -14,16 +14,18 @@
 
   const dispatch = createEventDispatcher();
 
+  const stateContext = getContext('stateContext');
+
   const handleChangeDone = (e) => {
-    tasks.taskCompleted($date.getFullDate(), e.target.checked, id);
+    stateContext.tasks.taskCompleted($date.getFullDate(), e.target.checked, id);
   };
 
   const handleChangeRating = (e) => {
-    tasks.changeRating($date.getFullDate(), e.target.value, id);
+    stateContext.tasks.changeRating($date.getFullDate(), e.target.value, id);
   };
 
   const handleRemove = (id) => {
-    tasks.taskRemove($date.getFullDate(), id);
+    stateContext.tasks.taskRemove($date.getFullDate(), id);
   };
 
   const handleEditTaskClick = (
@@ -45,59 +47,57 @@
   };
 </script>
 
-<div class="task">
-  <div class="task-container">
-    <div class="task-left">
-      <div
-        class="task-marker"
-        style={`background: ${$createTaskData.markers[markersInd]}`}
-      />
-      <div>
-        <p>{description}</p>
-        <span>{$createTaskData.category[categoryInd]}</span>
+<div class="task-container">
+  <div class="task-left">
+    <div
+      class="task-marker"
+      style={`background: ${$createTaskData.markers[markersInd]}`}
+    />
+    <div>
+      <p>{description}</p>
+      <span>{$createTaskData.category[categoryInd]}</span>
+    </div>
+  </div>
+
+  <div class="task-right">
+    <div class="task-right-container">
+      <p>{`${hour}:${minute}`}</p>
+      <div class="task-raiting">
+        <div class="raiting-items">
+          {#each Array.from({ length: 3 }) as star, i (id + i)}
+            <Star num={i + 1} {id} {rating} on:input={handleChangeRating} />
+          {/each}
+        </div>
       </div>
     </div>
-
-    <div class="task-right">
-      <div class="task-right-container">
-        <p>{`${hour}:${minute}`}</p>
-        <div class="task-raiting">
-          <div class="raiting-items">
-            {#each Array.from({ length: 3 }) as star, i (id + i)}
-              <Star num={i + 1} {id} {rating} on:input={handleChangeRating} />
-            {/each}
-          </div>
-        </div>
+    <div class="task-actions">
+      <div class="task-check">
+        <input
+          id={`checkbox-${id}`}
+          type="checkbox"
+          checked={done}
+          class="custom-checkbox"
+          on:input={handleChangeDone}
+        />
+        <label for={`checkbox-${id}`} />
       </div>
-      <div class="task-actions">
-        <div class="task-check">
-          <input
-            id={`checkbox-${id}`}
-            type="checkbox"
-            checked={done}
-            class="custom-checkbox"
-            on:input={handleChangeDone}
-          />
-          <label for={`checkbox-${id}`} />
-        </div>
-        <div class="task-dropdown">
-          <button class="task-actions-btn">
-            <img src={triangularArrow} alt="arrow" />
-          </button>
-          <div class="task-dropdown-content">
-            <span
-              on:click={() =>
-                handleEditTaskClick(
-                  hour,
-                  minute,
-                  description,
-                  id,
-                  categoryInd,
-                  markersInd
-                )}>Edit</span
-            >
-            <span on:click={() => handleRemove(id)}>Delete</span>
-          </div>
+      <div class="task-dropdown">
+        <button class="task-actions-btn">
+          <img src={triangularArrow} alt="arrow" />
+        </button>
+        <div class="task-dropdown-content">
+          <span
+            on:click={() =>
+              handleEditTaskClick(
+                hour,
+                minute,
+                description,
+                id,
+                categoryInd,
+                markersInd
+              )}>Edit</span
+          >
+          <span on:click={() => handleRemove(id)}>Delete</span>
         </div>
       </div>
     </div>
@@ -105,12 +105,6 @@
 </div>
 
 <style>
-  .task {
-    width: 90%;
-    margin: 10px;
-    box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
-  }
-
   .task-container {
     position: relative;
     display: flex;

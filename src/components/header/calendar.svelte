@@ -17,7 +17,7 @@
 <div class="calendar">
   {#if visibleCalendar}
     <div class="calendar-window" transition:fade>
-      <div class="calendar-year">{$date.year} г.</div>
+      <div class="calendar-year">{$date.year}</div>
       <div class="calendar-months" on:click={clickByMonthHandler}>
         {#each $date.months as month, i}
           <span id={i} class:active-month={month === $date.getMonth()}

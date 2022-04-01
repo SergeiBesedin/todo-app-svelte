@@ -1,5 +1,7 @@
 <script>
+  import { setContext } from 'svelte';
   import { tasks, createTaskData, date } from './store/store';
+  import BaseLayout from './layouts/base-layout.svelte';
   import Header from './components/header/header.svelte';
   import Toolbar from './components/toolbar/toolbar.svelte';
   import TaskCreation from './components/modal-windows/task-creation-window.svelte';
@@ -7,6 +9,8 @@
   import Buttons from './components/buttons.svelte';
   import ModalConfirm from './components/modal-windows/modal-confirm.svelte';
   import Auth from './components/modal-windows/auth-modal.svelte';
+
+  setContext('todos', { tasks });
 
   let currentFilter = 'All';
   let editTask = false;
@@ -116,9 +120,15 @@
 
 <div class="wrapper">
   <div class="container">
-    <div class="app" class:block={visibleConfirmModal}>
-      <Header {visibleCalendar} on:click={handleOpenCalendar} {updateTasks} />
-      <main>
+    <div class="todo" class:block={visibleConfirmModal}>
+      <BaseLayout>
+        <div slot="header">
+          <Header
+            {visibleCalendar}
+            on:click={handleOpenCalendar}
+            {updateTasks}
+          />
+        </div>
         <Toolbar
           {filteredTasks}
           {currentFilter}
@@ -130,7 +140,7 @@
           on:editTaskClick={handleEditTaskClick}
         />
         <Buttons {handleOpenCreateTask} {handleClearClick} />
-      </main>
+      </BaseLayout>
     </div>
     <TaskCreation
       {editTask}
@@ -160,18 +170,12 @@
     position: relative;
   }
 
-  .app {
+  .todo {
     position: relative;
     box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
   }
 
   .block {
     z-index: -1;
-  }
-
-  main {
-    background: #ffffff;
-    border-radius: 0 0 5px 5px;
-    position: relative;
   }
 </style>

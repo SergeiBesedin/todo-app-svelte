@@ -1,12 +1,15 @@
 <script>
-  import { tasks, date } from '../../store/store';
+  import { getContext } from 'svelte';
+  import { date } from '../../store/store';
   export let filteredTasks;
+
+  const stateContext = getContext('stateContext');
 
   const sortTasksByOption = (e) => {
     if (e.target.value === 'time') {
-      tasks.sortTasksByTime($date.getFullDate());
+      stateContext.tasks.sortTasksByTime($date.getFullDate());
     } else {
-      tasks.sortTasks($date.getFullDate(), e.target.value);
+      stateContext.tasks.sortTasks($date.getFullDate(), e.target.value);
     }
   };
 </script>

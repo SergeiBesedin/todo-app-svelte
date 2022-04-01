@@ -19,27 +19,26 @@
   };
 </script>
 
-<header>
-  <div class="header-date">
-    <CurrentDate />
-    <Calendar {visibleCalendar} on:click on:changeDate={handleChangeDate} />
-  </div>
+<div class="header-date">
+  <CurrentDate />
+  <Calendar {visibleCalendar} on:click on:changeDate={handleChangeDate} />
+</div>
+<div class="day-carousel">
   <DayCarousel on:changeDate={handleChangeDate} />
-</header>
+</div>
 
 <style>
-  header {
-    position: relative;
-    padding: 15px 10px 10px;
-    background: linear-gradient(0deg, #696eff, #f6a9ff);
-    border-radius: 5px 5px 0 0;
-  }
-
   .header-date {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
     margin-bottom: 5px;
+  }
+
+  .day-carousel {
+    position: relative;
+    overflow: hidden;
+    user-select: none;
   }
 </style>

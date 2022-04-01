@@ -1,11 +1,19 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
-  import { onMount, afterUpdate } from 'svelte';
+  import { createEventDispatcher, onMount, afterUpdate } from 'svelte';
   import { date } from '../../store/store';
   import arrowNext from '../../assets/icons/next-arrow.png';
   import arrowPrev from '../../assets/icons/prev-arrow.png';
 
   const dispatch = createEventDispatcher();
+
+  onMount(() => {
+    scrollCarousel();
+  });
+
+  afterUpdate(() => {
+    scrollCarousel();
+  });
+
   $: currentPosition = $date.day;
   $: totalDays = $date.getTotalDays();
 
@@ -25,52 +33,34 @@
       (currentPosition - 1) * -55
     }px, 0)`;
   };
-
-  onMount(() => {
-    scrollCarousel();
-  });
-
-  afterUpdate(() => {
-    scrollCarousel();
-  });
 </script>
 
-<div class="days">
-  <div
-    class="btn-prev"
-    class:disabled={currentPosition === 1}
-    on:click={() => clickToBtnHandler(currentPosition - 1)}
-  >
-    <img src={arrowPrev} alt="arrow-prev" />
-  </div>
-  <div class="container">
-    <ul class="days-list" on:click={(e) => clickByDayHandler(e)}>
-      {#each Array.from({ length: totalDays }) as number, i}
-        <li id={i + 1} class:active={$date.day == i + 1}>
-          {$date.daysOfTheWeek[
-            new Date($date.year, $date.month, i + 1).getDay()
-          ]}
-          {i + 1}
-        </li>
-      {/each}
-    </ul>
-  </div>
-  <div
-    class="btn-next"
-    class:disabled={currentPosition === totalDays}
-    on:click={() => clickToBtnHandler(currentPosition + 1)}
-  >
-    <img src={arrowNext} alt="arrow-next" />
-  </div>
+<div
+  class="btn-prev"
+  class:disabled={currentPosition === 1}
+  on:click={() => clickToBtnHandler(currentPosition - 1)}
+>
+  <img src={arrowPrev} alt="arrow-prev" />
+</div>
+<div class="container">
+  <ul class="days-list" on:click={(e) => clickByDayHandler(e)}>
+    {#each Array.from({ length: totalDays }) as number, i}
+      <li id={i + 1} class:active={$date.day == i + 1}>
+        {$date.daysOfTheWeek[new Date($date.year, $date.month, i + 1).getDay()]}
+        {i + 1}
+      </li>
+    {/each}
+  </ul>
+</div>
+<div
+  class="btn-next"
+  class:disabled={currentPosition === totalDays}
+  on:click={() => clickToBtnHandler(currentPosition + 1)}
+>
+  <img src={arrowNext} alt="arrow-next" />
 </div>
 
 <style>
-  .days {
-    position: relative;
-    overflow: hidden;
-    user-select: none;
-  }
-
   .container {
     max-width: 385px;
     overflow: hidden;
