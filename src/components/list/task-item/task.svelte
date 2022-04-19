@@ -14,7 +14,7 @@
 
   const dispatch = createEventDispatcher();
 
-  const stateContext = getContext('stateContext');
+  const stateContext = getContext('todos');
 
   const handleChangeDone = (e) => {
     stateContext.tasks.taskCompleted($date.getFullDate(), e.target.checked, id);

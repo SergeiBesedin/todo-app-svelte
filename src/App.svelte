@@ -1,14 +1,15 @@
 <script>
-  import { setContext } from 'svelte';
+  import { setContext, onMount } from 'svelte';
   import { tasks, createTaskData, date } from './store/store';
   import BaseLayout from './layouts/base-layout.svelte';
   import Header from './components/header/header.svelte';
   import Toolbar from './components/toolbar/toolbar.svelte';
-  import TaskCreation from './components/modal-windows/task-creation-window.svelte';
+  import ModalTaskCreation from './components/modal-windows/task-creation-window.svelte';
+  import ModalConfirm from './components/modal-windows/modal-confirm.svelte';
+  import ModalAuth from './components/modal-windows/auth-modal.svelte';
   import TasksList from './components/list/tasks-list.svelte';
   import Buttons from './components/buttons.svelte';
-  import ModalConfirm from './components/modal-windows/modal-confirm.svelte';
-  import Auth from './components/modal-windows/auth-modal.svelte';
+  import { autoLogin } from './utils/utils';
 
   setContext('todos', { tasks });
 
@@ -18,6 +19,10 @@
   let visibleCalendar = false;
   let visibleConfirmModal = false;
   let visibleAuthForm = false;
+
+  onMount(() => {
+    autoLogin();
+  });
 
   const updateDate = () => {
     date.update((value) => {
@@ -147,7 +152,7 @@
         <Buttons {handleOpenCreateTask} {handleClearClick} />
       </BaseLayout>
     </div>
-    <TaskCreation
+    <ModalTaskCreation
       {editTask}
       {visibleTaskCreation}
       {handleCloseCreateTask}
@@ -155,7 +160,7 @@
       on:change={() => updateTasks($date.getFullDate())}
     />
     <ModalConfirm {visibleConfirmModal} {handleClearList} />
-    <Auth {visibleAuthForm} on:click={handleCloseAuthForm} />
+    <ModalAuth {visibleAuthForm} on:click={handleCloseAuthForm} />
   </div>
 </div>
 

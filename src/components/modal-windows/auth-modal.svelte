@@ -1,18 +1,29 @@
 <script>
+  import { authData } from '../../store/store';
   import { fade } from 'svelte/transition';
   import { auth } from '../../utils/utils';
   export let visibleAuthForm;
 
   let email;
   let password;
+
+  const loginHandler = async () => {
+    await auth(email, password, true);
+    if ($authData.token) {
+    }
+  };
+
+  const registerHandler = () => {
+    auth(email, password, false);
+  };
 </script>
 
 {#if visibleAuthForm}
   <div class="auth" transition:fade>
     <div class="auth-modal">
-      <div class="auth-close" on:click on:click />
+      <div class="auth-close" on:click />
       <form>
-        <h3>Авторизация</h3>
+        <h3>Authorization</h3>
         <div class="auth-login">
           <div>Email:</div>
           <input minlength="6" required bind:value={email} />
@@ -22,14 +33,10 @@
           <input minlength="6" required type="password" bind:value={password} />
         </div>
         <div class="auth-btns">
-          <button
-            type="submit"
-            on:click|preventDefault={() => auth(email, password, true)}
+          <button type="submit" on:click|preventDefault={loginHandler}
             >log in</button
           >
-          <button
-            type="submit"
-            on:click|preventDefault={() => auth(email, password, false)}
+          <button type="submit" on:click|preventDefault={registerHandler}
             >register</button
           >
         </div>
@@ -50,6 +57,10 @@
     color: #ffffff;
     box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2);
     border-radius: 10px;
+  }
+
+  .auth h3 {
+    text-align: center;
   }
 
   .auth-modal {

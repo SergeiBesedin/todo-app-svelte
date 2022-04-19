@@ -3,7 +3,7 @@
   import { date } from '../../store/store';
   export let filteredTasks;
 
-  const stateContext = getContext('stateContext');
+  const stateContext = getContext('todos');
 
   const sortTasksByOption = (e) => {
     if (e.target.value === 'time') {

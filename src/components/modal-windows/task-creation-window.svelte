@@ -1,13 +1,13 @@
 <script>
-  import { fade } from 'svelte/transition';
   import { getContext } from 'svelte';
+  import { fade } from 'svelte/transition';
   import { date, createTaskData } from '../../store/store';
   import { makeTwoDigits } from '../../utils/utils';
   export let editTask;
   export let visibleTaskCreation;
   export let handleCloseCreateTask = () => handleCloseCreateTask;
 
-  const stateContext = getContext('stateContext');
+  const stateContext = getContext('todos');
 
   let totalDays = $date.getTotalDays();
   let hour = makeTwoDigits($date.hour);

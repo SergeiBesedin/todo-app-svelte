@@ -1,14 +1,24 @@
 <script>
   import { date } from '../../store/store';
+  import Calendar from './calendar.svelte';
+  export let visibleCalendar;
 </script>
 
-<div class="date">
-  <span>{$date.day}</span>
-  <span>{$date.getMonth()}, {$date.year}</span>
-  <span>{$date.getDayOfTheWeek()}</span>
+<div class="current-date">
+  <Calendar {visibleCalendar} on:click on:changeDate />
+  <div class="date">
+    <span>{$date.day}</span>
+    <span>{$date.getMonth()}, {$date.year}</span>
+    <span>{$date.getDayOfTheWeek()}</span>
+  </div>
 </div>
 
 <style>
+  .current-date {
+    display: flex;
+    align-items: center;
+  }
+
   .date {
     display: grid;
     max-width: 150px;

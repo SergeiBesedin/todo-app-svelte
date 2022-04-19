@@ -1,39 +1,20 @@
+import { authData } from '../store/store';
+
 export const makeTwoDigits = (num) => {
   return num.toString().padStart(2, 0);
 };
 
-// export const auth = (email, password, isLogin) => {
-//   return async () => {
-//     const authData = {
-//       email,
-//       password,
-//       returnSecureToken: true,
-//     };
-//     const url =
-//       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA1wvqaPKt6YV-c8WN-LYcMvzDhUHpoR3I';
-//     if (isLogin) {
-//       url =
-//         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA1wvqaPKt6YV-c8WN-LYcMvzDhUHpoR3I';
-//     }
-//     const response = await fetch(url, {
-//       method: 'POST',
-//       body: JSON.stringify(authData),
-//     });
-//     const data = response.data;
-//     const expirationDate = new Date(
-//       new Date().getTime() + data.expiresIn * 1000
-//     );
+export const validateEmail = (email) => {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
 
-//     localStorage.setItem('token', data.idToken);
-//     localStorage.setItem('userId', data.localId);
-//     localStorage.setItem('expirationDate', expirationDate);
-//   };
-// };
-
-export async function auth(email, password, isLogin) {
+export const auth = (email, password, isLogin) => {
   const authData = {
     email,
     password,
+    returnSecureToken: true,
   };
   let url =
     'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA1wvqaPKt6YV-c8WN-LYcMvzDhUHpoR3I'; //РЕГИСТРАЦИЯ
@@ -50,5 +31,47 @@ export async function auth(email, password, isLogin) {
       console.log(data);
       localStorage.setItem('token', data.idToken);
       localStorage.setItem('userId', data.localId);
+      localStorage.setItem(
+        'sessionTime',
+        new Date(new Date().getTime() + data.expiresIn * 1000)
+      );
+      authSuccess(data.idToken);
+      autoLogout(data.expiresIn);
     });
-}
+};
+
+export const autoLogin = () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    logout();
+  } else {
+    const sessionTime = new Date(localStorage.getItem('sessionTime'));
+    if (sessionTime <= new Date()) {
+      logout();
+    } else {
+      authSuccess(token);
+      autoLogout((sessionTime.getTime() - new Date().getTime()) / 1000);
+    }
+  }
+};
+
+export const autoLogout = (time) => {
+  setTimeout(() => {
+    logout();
+  }, time * 1000);
+};
+
+export const logout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('userId');
+  localStorage.removeItem('sessionTime');
+  authData.update((value) => {
+    return { ...value, token: null };
+  });
+};
+
+export const authSuccess = (token) => {
+  authData.update((value) => {
+    return { ...value, token };
+  });
+};

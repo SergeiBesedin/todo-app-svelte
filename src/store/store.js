@@ -1,6 +1,8 @@
 import { writable } from 'svelte/store';
 import { v4 as uuidv4 } from 'uuid';
 
+export const authData = writable({ token: null });
+
 export const createTaskData = writable({
   category: ['Shopping', 'Hobby', 'Sport', 'Education', 'Job', 'Housework'],
   categoryInd: 0,

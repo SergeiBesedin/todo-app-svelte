@@ -14,7 +14,7 @@
   };
 </script>
 
-<div class="calendar">
+<div class="calendar" on:click>
   {#if visibleCalendar}
     <div class="calendar-window" transition:fade>
       <div class="calendar-year">{$date.year}</div>
@@ -28,21 +28,28 @@
     </div>
   {/if}
 
-  <div class="calendar-icon" on:click>
+  <button class="calendar-icon">
     <img src={calendar} alt="calendar" />
-  </div>
+  </button>
 </div>
 
 <style>
   .calendar {
+    border-radius: 50%;
+    border: 1px solid #ffffff;
+    background-color: #696eff;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    cursor: pointer;
   }
 
   .calendar-window {
     position: absolute;
     top: 5px;
-    right: 50px;
+    left: 65px;
     color: #ffffff;
     background: #ffffff;
     border-radius: 5px;
@@ -76,6 +83,12 @@
   }
 
   .calendar-icon {
-    cursor: pointer;
+    padding: 0;
+    background-color: #696eff;
+  }
+
+  .calendar-icon img {
+    width: 26px;
+    height: 26px;
   }
 </style>
