@@ -17,7 +17,7 @@
   let visibleTaskCreation = false;
   let visibleCalendar = false;
   let visibleConfirmModal = false;
-  let visibleAuthForm = true;
+  let visibleAuthForm = false;
 
   const updateDate = () => {
     date.update((value) => {
@@ -54,6 +54,10 @@
     } else {
       return [...tasks];
     }
+  };
+
+  const handleOpenAuthForm = () => {
+    visibleAuthForm = true;
   };
 
   const handleCloseAuthForm = () => {
@@ -126,6 +130,7 @@
           <Header
             {visibleCalendar}
             on:click={handleOpenCalendar}
+            {handleOpenAuthForm}
             {updateTasks}
           />
         </div>

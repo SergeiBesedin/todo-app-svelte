@@ -1,6 +1,10 @@
 <script>
   import { fade } from 'svelte/transition';
+  import { auth } from '../../utils/utils';
   export let visibleAuthForm;
+
+  let email;
+  let password;
 </script>
 
 {#if visibleAuthForm}
@@ -8,17 +12,26 @@
     <div class="auth-modal">
       <div class="auth-close" on:click on:click />
       <form>
+        <h3>Авторизация</h3>
         <div class="auth-login">
-          <div>Login:</div>
-          <input minlength="6" required />
+          <div>Email:</div>
+          <input minlength="6" required bind:value={email} />
         </div>
         <div class="auth-pass">
           <div>Password:</div>
-          <input minlength="6" required type="password" />
+          <input minlength="6" required type="password" bind:value={password} />
         </div>
         <div class="auth-btns">
-          <button type="submit">log in</button>
-          <button>register</button>
+          <button
+            type="submit"
+            on:click|preventDefault={() => auth(email, password, true)}
+            >log in</button
+          >
+          <button
+            type="submit"
+            on:click|preventDefault={() => auth(email, password, false)}
+            >register</button
+          >
         </div>
       </form>
     </div>
@@ -30,8 +43,8 @@
     z-index: 101;
     position: absolute;
     top: 50%;
-    left: 100px;
-    right: 100px;
+    left: 15%;
+    right: 15%;
     transform: translateY(-50%);
     background: #f6a9ff;
     color: #ffffff;
