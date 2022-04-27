@@ -4,13 +4,7 @@ export const makeTwoDigits = (num) => {
   return num.toString().padStart(2, 0);
 };
 
-export const validateEmail = (email) => {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-};
-
-export const auth = (email, password, isLogin) => {
+export const auth = async (email, password, isLogin) => {
   const authData = {
     email,
     password,
@@ -22,7 +16,7 @@ export const auth = (email, password, isLogin) => {
     url =
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA1wvqaPKt6YV-c8WN-LYcMvzDhUHpoR3I'; //ВХОД
   }
-  fetch(url, {
+  await fetch(url, {
     method: 'POST',
     body: JSON.stringify(authData),
   })

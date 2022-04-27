@@ -3,7 +3,7 @@
   import CurrentDate from './current-date.svelte';
   import DayCarousel from './day-carousel.svelte';
   import { logout } from '../../utils/utils';
-  import loginIcon from '../../assets/icons/login.png';
+  import loginIcon from '../../assets/icons/login-icon.png';
   import logoutIcon from '../../assets/icons/logout.png';
   export let updateTasks = (date) => updateTasks(date);
   export let handleOpenAuthForm = () => handleOpenAuthForm();

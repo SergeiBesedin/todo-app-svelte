@@ -20,6 +20,7 @@
   let visibleConfirmModal = false;
   let visibleAuthForm = false;
 
+  //Проверка токена на наличие
   onMount(() => {
     autoLogin();
   });
@@ -160,7 +161,7 @@
       on:change={() => updateTasks($date.getFullDate())}
     />
     <ModalConfirm {visibleConfirmModal} {handleClearList} />
-    <ModalAuth {visibleAuthForm} on:click={handleCloseAuthForm} />
+    <ModalAuth {visibleAuthForm} {handleCloseAuthForm} />
   </div>
 </div>
 

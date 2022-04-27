@@ -2,6 +2,7 @@
   import { authData } from '../../store/store';
   import { fade } from 'svelte/transition';
   import { auth } from '../../utils/utils';
+  export let handleCloseAuthForm = () => handleCloseAuthForm();
   export let visibleAuthForm;
 
   let email;
@@ -10,6 +11,7 @@
   const loginHandler = async () => {
     await auth(email, password, true);
     if ($authData.token) {
+      handleCloseAuthForm();
     }
   };
 
@@ -21,9 +23,8 @@
 {#if visibleAuthForm}
   <div class="auth" transition:fade>
     <div class="auth-modal">
-      <div class="auth-close" on:click />
+      <div class="auth-close" on:click={handleCloseAuthForm} />
       <form>
-        <h3>Authorization</h3>
         <div class="auth-login">
           <div>Email:</div>
           <input minlength="6" required bind:value={email} />
