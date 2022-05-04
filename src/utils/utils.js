@@ -16,22 +16,22 @@ export const auth = async (email, password, isLogin) => {
     url =
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA1wvqaPKt6YV-c8WN-LYcMvzDhUHpoR3I'; //ВХОД
   }
-  await fetch(url, {
+  const response = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(authData),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      localStorage.setItem('token', data.idToken);
-      localStorage.setItem('userId', data.localId);
-      localStorage.setItem(
-        'sessionTime',
-        new Date(new Date().getTime() + data.expiresIn * 1000)
-      );
-      authSuccess(data.idToken);
-      autoLogout(data.expiresIn);
-    });
+  });
+  const data = await response.json();
+  if (isLogin) {
+    localStorage.setItem('token', data.idToken);
+    localStorage.setItem('userId', data.localId);
+    localStorage.setItem(
+      'sessionTime',
+      new Date(new Date().getTime() + data.expiresIn * 1000)
+    );
+    authSuccess(data.idToken);
+    autoLogout(data.expiresIn);
+  }
+  return data;
 };
 
 export const autoLogin = () => {
